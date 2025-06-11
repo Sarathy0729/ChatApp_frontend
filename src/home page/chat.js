@@ -1,5 +1,6 @@
  import React, { useEffect, useState } from "react";
 import "./chatstyle.css";
+// import EmojiPickerContainer from "./emoji";
 import EmojiPicker from 'emoji-picker-react';
 // import groupuser from '../images/group.png';
 
@@ -72,13 +73,7 @@ setMessages([]);
 })
 .catch((error) => console.error("Error fetching messages:", error));
  
-}, [ ]);
- 
-
-
-
-
-
+}, []);
 
 // useEffect(()=>{
 // fetch(`http://localhost:3005/group-messages?group_id=${group.id}`, {
@@ -212,6 +207,7 @@ const sendMessage = () => {
 
 // --------fetchMessages-------------------------
 const fetchMessages = (sender_id, receiver_id) => {
+    console.log("sender_id",sender_id);
  fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
  method: "GET",
  headers: {
@@ -230,8 +226,6 @@ const fetchMessages = (sender_id, receiver_id) => {
  })
  .catch((error) => console.error("Error fetching messages:", error));
 };
-
-
 // const fetchGroupMessages = (group_id) => {
 //  fetch(`http://localhost:3005/group-messages? group_id=${group_id}`, {
 //  method: "GET",
@@ -376,6 +370,10 @@ const handleChangeWallpaper = (event) => {
  const switchToLightMode = () => {
  setTheme('light');
  };
+   const handleEmojiClick = (emojiData) => {
+    setMessage((prev) => prev + emojiData.emoji);
+    setShowEmojiPicker(false);
+  };
 // const handleImageChange = (event) => {
 // const file = event.target.files[0];
 // if (file) {
@@ -401,6 +399,7 @@ const handleChangeWallpaper = (event) => {
  <h3 id="name">{name}</h3>
  </div>
  </div>
+ {/* ----profile----- */}
 
  <div className="menu-container">
  <button className="menu-button" onClick={toggleMenu}>⋮</button>
@@ -421,6 +420,7 @@ const handleChangeWallpaper = (event) => {
  
  <input type="checkbox" value={user.id} onChange={(e) => {
  const userId = e.target.value;
+ console.log("userId",userId);
  if (e.target.checked) {
  console.log("check",e.target.checked);
  setGroupMembers([...groupMembers, userId]);
@@ -452,9 +452,12 @@ const handleChangeWallpaper = (event) => {
  </ul>
  )}
  </div>
+ {/* -----toggleMenu------ */}
  
  <input type="text" id="search-input" placeholder="Search" />
  </header>
+ {/* ------Headers-------- */}
+
  <ul id="chat-list">
  {chatList.map((user, index) => (
  <li key={index} className="chat-members" onClick={() => openChat(user)}>
@@ -473,7 +476,9 @@ const handleChangeWallpaper = (event) => {
  </li>
  ))} */}
  </ul>
+ {/* <h1> Hello</h1> */}
  </nav>
+ {/* ------sidenav----- */}
  <div className="chat-window">
  {(selectedUser || selectedGroup) && (
  <>
@@ -521,21 +526,23 @@ const handleChangeWallpaper = (event) => {
  </>
  )}
  <div className="chat-input">
- <label htmlFor="file" className="emoji">
+ {/* <label htmlFor="file" className="emoji">
  <img src={""} alt="file" id="icon"/>
  </label>
- <input type="file" id="file" onChange={(e) => {}} />
+ <input type="file" id="file" onChange={(e) => {}} /> */}
  <input type="text" id="message-input" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
  <button id="send-button" onClick={sendMessage}>Send</button>
  <div className="emojiicon">
  {showEmojiPicker && <EmojiPicker onEmojiClick={onEmojiClick} />}
- <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}>😊</button>
+ {/* {showEmojiPicker && <EmojiPickerContainer onEmojiClick={handleEmojiClick} />} */}
+  <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}>😊</button> 
  </div>
  
  </div>
  
 
 </div>
+{/* ------chatWindow------- */}
 
  </div>
  );

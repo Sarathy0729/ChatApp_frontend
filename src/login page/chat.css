@@ -333,7 +333,7 @@ a:link {
 
 
 
-
+/* 
 
 body {
     margin: 0;
@@ -346,9 +346,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-}
+} */
 
 /* Container for Login Form */
+body {
+   
+    background-repeat: no-repeat;
+    background-size: cover;
+     font-family: Georgia, 'Times New Roman', Times, serif; 
+     height: 100vh;
+    
+}
 .container {
     width: 380px;
     padding: 30px 40px;
