@@ -2,6 +2,7 @@
 import "./chatstyle.css";
 // import EmojiPickerContainer from "./emoji";
 import EmojiPicker from 'emoji-picker-react';
+import Sidebar from "./sideBar";
 // import groupuser from '../images/group.png';
 
 
@@ -99,9 +100,14 @@ setMessages([]);
 // },[groupMessages]);
 
  const openChat = (user) => {
+ 
+  console.log("openChat",);
+
 
  setReceiverId(user.id);
  setSelectedUser(user);
+  console.log("user.id22",user.id);
+  console.log("user",user);
 
 
  fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${user.id}`, {
@@ -259,6 +265,7 @@ const fetchMessages = (sender_id, receiver_id) => {
  };
 
  const toggleMenu = () => {
+  console.log("Toogle_Menu");
  setShowMenu(!showMenu);
  
  };
@@ -391,34 +398,45 @@ const handleChangeWallpaper = (event) => {
 
  return (
  <div className={`app-container ${theme}`}>
- <nav className="sidebar">
+  <Sidebar 
+  name={name}
+  image={image}
+  chatList={chatList}
+  toggleMenu={toggleMenu}
+  // showMenu={showMenu}
+    openChat={openChat}
+  />
+  
+
+
+ {/* <nav className="sidebar">
  <header className="sidebar-header">
  <div className="profile-container">
  <img src={image }alt="Your Profile" className="profile" />
  <div className="myprofile">
  <h3 id="name">{name}</h3>
  </div>
- </div>
+ </div> */}
  {/* ----profile----- */}
 
- <div className="menu-container">
+ {/* <div className="menu-container">
  <button className="menu-button" onClick={toggleMenu}>⋮</button>
  {showMenu && (
  <ul className="dropdown-menu">
  
- <li onClick={() => setIsCreatingGroup(true)}>New Group</li>
+ <li onClick={() => setIsCreatingGroup(true)}>New Group</li> */}
 
 
- {isCreatingGroup && (
+ {/* {isCreatingGroup && (
  <div className="group-creation-modal">
  <h2>Create New Group</h2>
  <input type="text" placeholder="Enter group name" value={groupName} onChange={(e) => setGroupName(e.target.value)} />
  <ul className="user-selection-list">
  {chatList.map((user) => (
  <li key={user.id}>
- <label>
+ <label> */}
  
- <input type="checkbox" value={user.id} onChange={(e) => {
+ {/* <input type="checkbox" value={user.id} onChange={(e) => {
  const userId = e.target.value;
  console.log("userId",userId);
  if (e.target.checked) {
@@ -430,9 +448,9 @@ const handleChangeWallpaper = (event) => {
  }
  }}
  />
- <img src={user.images } className="gprofile" />
+ <img src={user.images } className="gprofile" /> */}
 
- {user.name}
+ {/* {user.name}
  </label>
  </li>
  ))}
@@ -440,25 +458,25 @@ const handleChangeWallpaper = (event) => {
  <button onClick={handleCreateGroup}>Create Group</button>
  <button onClick={() => setIsCreatingGroup(false)}>Cancel</button>
  </div>
-)} 
+)}  
  
 
 
- <li onClick={handleSetting}>Settings</li>
+ {/* <li onClick={handleSetting}>Settings</li>
  <li onClick={handleLogout}>Logout</li>
  
  <li onClick={switchToDarkMode}>Dark Mode</li>
  <li onClick={switchToLightMode}>Light Mode</li>
  </ul>
  )}
- </div>
+ </div> */}
  {/* -----toggleMenu------ */}
  
- <input type="text" id="search-input" placeholder="Search" />
- </header>
+ {/* {/* <input type="text" id="search-input" placeholder="Search" />
+ </header> */}
  {/* ------Headers-------- */}
 
- <ul id="chat-list">
+ {/* <ul id="chat-list">
  {chatList.map((user, index) => (
  <li key={index} className="chat-members" onClick={() => openChat(user)}>
  <img src={user.images} alt="profile pic" className="profile" />
@@ -466,7 +484,7 @@ const handleChangeWallpaper = (event) => {
  <h2>{user.name}</h2>
  </div>
  </li>
- ))}
+ ))} */}
  {/* {grouplist.map((group, index) => (
  <li key={index} className="chat-members" onClick={() => opengroupchat(group)}>
  <img src={''} alt="profile pic" className="profile" />
@@ -475,9 +493,9 @@ const handleChangeWallpaper = (event) => {
  </div>
  </li>
  ))} */}
- </ul>
+ {/* </ul> */}
  {/* <h1> Hello</h1> */}
- </nav>
+ {/* </nav> */}
  {/* ------sidenav----- */}
  <div className="chat-window">
  {(selectedUser || selectedGroup) && (
@@ -526,10 +544,10 @@ const handleChangeWallpaper = (event) => {
  </>
  )}
  <div className="chat-input">
- {/* <label htmlFor="file" className="emoji">
+ <label htmlFor="file" className="emoji">
  <img src={""} alt="file" id="icon"/>
  </label>
- <input type="file" id="file" onChange={(e) => {}} /> */}
+ <input type="file" id="file" onChange={(e) => {}} />
  <input type="text" id="message-input" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
  <button id="send-button" onClick={sendMessage}>Send</button>
  <div className="emojiicon">

@@ -23,7 +23,7 @@ const GroupCreationModal = ({
               } else {
                
               }
-              setGroupMembers(updated);
+              setGroupMembers();
             }}
           />
           {user.name}

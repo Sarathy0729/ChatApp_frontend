@@ -8,6 +8,7 @@ const Sidebar = ({
   image,
   chatList,
   toggleMenu,
+  openChat,
   showMenu,
   
  
@@ -28,14 +29,14 @@ const Sidebar = ({
         </div>
         <div className="menu-container">
           <button className="menu-button" onClick={toggleMenu}>⋮</button>
-          {showMenu && <GroupCreationModal/>}
+          {/* {showMenu && <GroupCreationModal/> } */}
         </div>
       </header>
 
       <div className="chat-list">
         <h4>Users</h4>
         {chatList.map((user) => (
-     <div key={user.id} className="chat-members" onClick={() => openChat(user)} >
+     <div key={user.id} className="chat-members" onClick={ openChat(user)} >
             <img src={user.image} alt={"profile pic"} className="profile" />
             <h2>{user.name}</h2>
           </div>
