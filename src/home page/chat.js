@@ -3,6 +3,7 @@ import "./chatstyle.css";
 // import EmojiPickerContainer from "./emoji";
 import EmojiPicker from 'emoji-picker-react';
 import Sidebar from "./sideBar";
+import GroupCreationModal from "./createGroup";
 // import groupuser from '../images/group.png';
 
 
@@ -26,6 +27,7 @@ const [groupMessages, setGroupMessages] = useState([]);
 const sender_id = localStorage.getItem("checkid");
 const [receiver_id, setReceiverId] = useState();
 const [image, setImages] = useState(localStorage.getItem("checkimage"));
+console.log("iscreategroup",isCreatingGroup);
 
 
  useEffect(() => {
@@ -272,46 +274,46 @@ const fetchMessages = (sender_id, receiver_id) => {
 
 // -------------createGroup----------
  
- const handleCreateGroup = () => {
- if (!groupName || groupMembers.length === 0) {
- alert("Please enter a group name and select members.");
- return;
- }
+//  const handleCreateGroup = () => {
+//  if (!groupName || groupMembers.length === 0) {
+//  alert("Please enter a group name and select members.");
+//  return;
+//  }
  
- const groupData = {
- groupName,
- groupMembers,
- createdBy: sender_id,
- };
- console.log("grouplist",groupData);
- console.log("groupname",groupName);
- console.log("groupmember",groupMembers);
- console.log("createdby",sender_id);
+//  const groupData = {
+//  groupName,
+//  groupMembers,
+//  createdBy: sender_id,
+//  };
+//  console.log("grouplist",groupData);
+//  console.log("groupname",groupName);
+//  console.log("groupmember",groupMembers);
+//  console.log("createdby",sender_id);
  
- fetch("http://localhost:3005/create-group", {
- method: "POST",
- headers: {
- "Content-Type": "application/json",
- },
- body: JSON.stringify(groupData),
- })
- .then((response) => response.json())
- .then((data) => {
- if (data.success) {
- alert("Group created successfully:", data.groupId);
+//  fetch("http://localhost:3005/create-group", {
+//  method: "POST",
+//  headers: {
+//  "Content-Type": "application/json",
+//  },
+//  body: JSON.stringify(groupData),
+//  })
+//  .then((response) => response.json())
+//  .then((data) => {
+//  if (data.success) {
+//  alert("Group created successfully:", data.groupId);
  
- setIsCreatingGroup(false);
- setGroupName("");
- setGroupMembers([]);
+//  setIsCreatingGroup(false);
+//  setGroupName("");
+//  setGroupMembers([]);
 
  
  
- } else {
- console.error("Failed to create group:", data.error);
- }
- })
- .catch((error) => console.error("Error creating group:", error));
- };
+//  } else {
+//  console.error("Failed to create group:", data.error);
+//  }
+//  })
+//  .catch((error) => console.error("Error creating group:", error));
+//  };
  
  const handleSetting =() =>{};
 
@@ -370,13 +372,13 @@ const handleChangeWallpaper = (event) => {
  };
 // --------theme--------
 
- const switchToDarkMode = () => {
- setTheme('dark');
- };
+//  const switchToDarkMode = () => {
+//  setTheme('dark');
+//  };
 
- const switchToLightMode = () => {
- setTheme('light');
- };
+//  const switchToLightMode = () => {
+//  setTheme('light');
+//  };
    const handleEmojiClick = (emojiData) => {
     setMessage((prev) => prev + emojiData.emoji);
     setShowEmojiPicker(false);
@@ -403,9 +405,21 @@ const handleChangeWallpaper = (event) => {
   image={image}
   chatList={chatList}
   toggleMenu={toggleMenu}
-  // showMenu={showMenu}
+  showMenu={showMenu}
+   setTheme={setTheme}
     openChat={openChat}
+    setIsCreatingGroup={setIsCreatingGroup}
+   
   />
+  {isCreatingGroup && ( <GroupCreationModal
+groupName={groupName}
+groupMembers={groupMembers}
+chatList={chatList}
+sender_id={sender_id}
+setGroupName={setGroupName}
+setGroupMembers={setGroupMembers}
+setIsCreatingGroup={setIsCreatingGroup}
+ />)}
   
 
 
@@ -427,16 +441,16 @@ const handleChangeWallpaper = (event) => {
  <li onClick={() => setIsCreatingGroup(true)}>New Group</li> */}
 
 
- {/* {isCreatingGroup && (
+  {/* {isCreatingGroup && (
  <div className="group-creation-modal">
  <h2>Create New Group</h2>
  <input type="text" placeholder="Enter group name" value={groupName} onChange={(e) => setGroupName(e.target.value)} />
  <ul className="user-selection-list">
  {chatList.map((user) => (
  <li key={user.id}>
- <label> */}
+ <label> 
  
- {/* <input type="checkbox" value={user.id} onChange={(e) => {
+  <input type="checkbox" value={user.id} onChange={(e) => {
  const userId = e.target.value;
  console.log("userId",userId);
  if (e.target.checked) {
@@ -450,7 +464,7 @@ const handleChangeWallpaper = (event) => {
  />
  <img src={user.images } className="gprofile" /> */}
 
- {/* {user.name}
+  {/* {user.name}
  </label>
  </li>
  ))}
@@ -458,7 +472,8 @@ const handleChangeWallpaper = (event) => {
  <button onClick={handleCreateGroup}>Create Group</button>
  <button onClick={() => setIsCreatingGroup(false)}>Cancel</button>
  </div>
-)}  
+)}  */}
+   
  
 
 
