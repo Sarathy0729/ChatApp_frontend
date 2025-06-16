@@ -11,11 +11,14 @@ const Sidebar = ({
   openChat,
   showMenu,
   setIsCreatingGroup,
-  setTheme
+  setTheme,
+  opengroupchat,
+  grouplist
 
   
  
 }) => {
+  console.log("name",name);
    const switchToDarkMode = () => {
  setTheme('dark');
  };
@@ -62,10 +65,18 @@ const Sidebar = ({
             <img src={user.images} alt={"profile pic"} className="profile" />
             <div className="chat-info"> 
             
-            <h2>{user.name}</h2>
+            <h2>{user.Name}</h2>
             </div>
           </li>
         ))}
+        {grouplist.map((group, index) => (
+ <li key={index} className="chat-members" onClick={() => opengroupchat(group)}>
+ <img src={''} alt="profile pic" className="profile" />
+ <div className="chat-info">
+ <h2>{group.group_name}</h2>
+ </div>
+ </li>
+ ))}
         
         
       </ul>

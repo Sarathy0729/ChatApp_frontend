@@ -42,18 +42,18 @@ console.log("iscreategroup",isCreatingGroup);
  .catch((error) => console.error("Error fetching user profile:", error));
  }, []);
 // -------groupList------
-//  useEffect(() => {
-//  fetch("http://localhost:3005/group-info", {
-//  method: "GET",
-//  headers: {
-//  "Content-Type": "application/json",
-//  },
-//  })
-//  .then((response) => response.json())
-//  .then((data) => setgrouplist(data))
+ useEffect(() => {
+ fetch("http://localhost:3005/group-info", {
+ method: "GET",
+ headers: {
+ "Content-Type": "application/json",
+ },
+ })
+ .then((response) => response.json())
+ .then((data) => setgrouplist(data))
  
-//  .catch((error) => console.error("Error fetching user profile:", error));
-//  }, []);
+ .catch((error) => console.error("Error fetching user profile:", error));
+ }, []);
  
 useEffect(() => {
 
@@ -134,30 +134,29 @@ setMessages([]);
  
 // ----select groupchat------
 
-// const opengroupchat = (group) => {
-//  setSelectedGroup(group);
+const opengroupchat = (group) => {
+ setSelectedGroup(group);
 
-
-//  fetch(`http://localhost:3005/group-messages?group_id=${group.id}`, {
-//  method: "GET",
-//  headers: {
-//  "Content-Type": "application/json",
-//  },
-//  })
-//  .then((response) => response.json())
-//  .then((data) => {
-//  if (Array.isArray(data)) {
-//  const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
-//  console.log("msg",sortedMessages);
-//  setGroupMessages(sortedMessages);
+ fetch(`http://localhost:3005/group-messages?group_id=${group.id}`, {
+ method: "GET",
+ headers: {
+ "Content-Type": "application/json",
+ },
+ })
+ .then((response) => response.json())
+ .then((data) => {
+ if (Array.isArray(data)) {
+ const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
+ console.log("msg",sortedMessages);
+ setGroupMessages(sortedMessages);
  
-//  } else {
-//  console.error("Unexpected data format:", data);
-//  setGroupMessages([]);
-//  }
-//  })
-//  .catch((error) => console.error("Error fetching group messages:", error));
-// };
+ } else {
+ console.error("Unexpected data format:", data);
+ setGroupMessages([]);
+ }
+ })
+ .catch((error) => console.error("Error fetching group messages:", error));
+};
 
 // ------sendMessage-----------------
 
@@ -165,30 +164,31 @@ const sendMessage = () => {
  
  
 
-//  if (selectedGroup) {
+ if (selectedGroup) {
  
-//  const newMessage = { message_text: message, sender_id, group_id: selectedGroup.id };
-//  console.log("newMessage",newMessage);
+ const newMessage = { message_text: message, sender_id, group_id: selectedGroup.id };
+ console.log("newMessage",newMessage);
  
-//  fetch("http://localhost:3005/send-group-message", {
-//  method: "POST",
-//  headers: {
-//  "Content-Type": "application/json",
-//  },
-//  body: JSON.stringify(newMessage),
-//  })
-//  .then((response) => response.json())
-//  .then((data) => {
-//  if (data.success) {
-//  fetchGroupMessages(selectedGroup.id);
-//  setMessage("");
-//  } else {
-//  console.error("Failed to send group message:", data.error);
-//  }
-//  })
-//  .catch((error) => console.error("Error sending group message:", error));
+ fetch("http://localhost:3005/send-group-message", {
+ method: "POST",
+ headers: {
+ "Content-Type": "application/json",
+ },
+ body: JSON.stringify(newMessage),
+ })
+ .then((response) => response.json())
+ .then((data) => {
+ if (data.success) {
+  console.log("selectedGroup.id",selectedGroup.id);
+ fetchGroupMessages(selectedGroup.id);
+ setMessage("");
+ } else {
+ console.error("Failed to send group message:", data.error);
+ }
+ })
+ .catch((error) => console.error("Error sending group message:", error));
 
-//  } else 
+ } else 
  if (selectedUser) {
  
  const newMessage = { text: message, sender_id, receiver_id };
@@ -234,26 +234,27 @@ const fetchMessages = (sender_id, receiver_id) => {
  })
  .catch((error) => console.error("Error fetching messages:", error));
 };
-// const fetchGroupMessages = (group_id) => {
-//  fetch(`http://localhost:3005/group-messages? group_id=${group_id}`, {
-//  method: "GET",
-//  headers: {
-//  "Content-Type": "application/json",
-//  },
-//  })
-//  .then((response) => response.json())
-//  .then((data) => {
-//  if (Array.isArray(data)) {
-//  console.log("data",data);
-//  const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
-//  setGroupMessages(sortedMessages);
-//  } else {
-//  console.error("Unexpected data format:", data);
-//  setGroupMessages([]);
-//  }
-//  })
-//  .catch((error) => console.error("Error fetching group messages:", error));
-// };
+const fetchGroupMessages = (group_id) => {
+  console.log("groupIdcr",group_id);
+ fetch(`http://localhost:3005/group-messages? group_id=${group_id}`, {
+ method: "GET",
+ headers: {
+ "Content-Type": "application/json",
+ },
+ })
+ .then((response) => response.json())
+ .then((data) => {
+ if (Array.isArray(data)) {
+ console.log("data",data);
+ const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
+ setGroupMessages(sortedMessages);
+ } else {
+ console.error("Unexpected data format:", data);
+ setGroupMessages([]);
+ }
+ })
+ .catch((error) => console.error("Error fetching group messages:", error));
+};
 // -------timedate------------------------
  const formatDate = (timestamp) => {
  return new Intl.DateTimeFormat("en-US", {
@@ -408,7 +409,9 @@ const handleChangeWallpaper = (event) => {
   showMenu={showMenu}
    setTheme={setTheme}
     openChat={openChat}
+    opengroupchat={opengroupchat}
     setIsCreatingGroup={setIsCreatingGroup}
+    grouplist={grouplist}
    
   />
   {isCreatingGroup && ( <GroupCreationModal
@@ -517,7 +520,7 @@ setIsCreatingGroup={setIsCreatingGroup}
  <>
  <div className="chat-header">
  <img src={selectedUser ? selectedUser.images : ''} alt="profile" className="profile" id="chat-header-image" />
- <h2 id="chat-header-name">{selectedUser ? selectedUser.name : selectedGroup.group_name}</h2>
+ <h2 id="chat-header-name">{selectedUser ? selectedUser.Name : selectedGroup.group_name}</h2>
  <button className="options-button" onClick={toggleOptionsMenu}>⋮</button>
  {showOptionsMenu && (
  <ul className="options-menu">
@@ -547,7 +550,7 @@ setIsCreatingGroup={setIsCreatingGroup}
  {(selectedUser ? messages : groupMessages).map((msg, index) => (
  <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
  <p>{msg.message_text}</p>
- <span className="message-time">{formatDate(msg.sent_at)}</span>
+ {/* <span className="message-time">{formatDate(msg.sent_at)}</span> */}
  {/* {msg.sender_id === sender_id && (
  <span className="message-status">
  {msg.is_read ? '✔✔' : '✔'}

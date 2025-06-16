@@ -24,6 +24,7 @@ function LoginForm() {
         const data = response.data;
         if (data.message === "Login successful") {
           alert("Login successful!");
+          console.log("loginname",data.name);
 
           localStorage.setItem("token", data.token);
           localStorage.setItem("checkname", data.name);
