@@ -39,11 +39,13 @@ console.log("iscreategroup",isCreatingGroup);
  })
  .then((response) => response.json())
  .then((data) => setChatList(data))
+ 
+
  .catch((error) => console.error("Error fetching user profile:", error));
  }, []);
 // -------groupList------
  useEffect(() => {
- fetch("http://localhost:3005/group-info", {
+ fetch(`http://localhost:3005/group-info?user_id=${sender_id}`, {
  method: "GET",
  headers: {
  "Content-Type": "application/json",
@@ -55,28 +57,28 @@ console.log("iscreategroup",isCreatingGroup);
  .catch((error) => console.error("Error fetching user profile:", error));
  }, []);
  
-useEffect(() => {
+// useEffect(() => {
 
-fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
-method: "GET",
-headers: {
-"Content-Type": "application/json",
-},
-},)
-.then((response) => response.json())
-.then((data) => {
-if (Array.isArray(data)) {
-const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
-setMessages(sortedMessages);
+// fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
+// method: "GET",
+// headers: {
+// "Content-Type": "application/json",
+// },
+// },)
+// .then((response) => response.json())
+// .then((data) => {
+// if (Array.isArray(data)) {
+// const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
+// setMessages(sortedMessages);
  
-} else {
-console.error("Unexpected data format:", data);
-setMessages([]);
-}
-})
-.catch((error) => console.error("Error fetching messages:", error));
+// } else {
+// console.error("Unexpected data format:", data);
+// setMessages([]);
+// }
+// })
+// .catch((error) => console.error("Error fetching messages:", error));
  
-}, []);
+// }, []);
 
 // useEffect(()=>{
 // fetch(`http://localhost:3005/group-messages?group_id=${group.id}`, {
@@ -103,7 +105,7 @@ setMessages([]);
 
  const openChat = (user) => {
  
-  console.log("openChat",);
+  // console.log("openChat");
 
 
  setReceiverId(user.id);
@@ -135,6 +137,7 @@ setMessages([]);
 // ----select groupchat------
 
 const opengroupchat = (group) => {
+  console.log("group",group);
  setSelectedGroup(group);
 
  fetch(`http://localhost:3005/group-messages?group_id=${group.id}`, {
@@ -179,7 +182,7 @@ const sendMessage = () => {
  .then((response) => response.json())
  .then((data) => {
  if (data.success) {
-  console.log("selectedGroup.id",selectedGroup.id);
+  console.log("selectedGroup.idjbnjb",selectedGroup.id);
  fetchGroupMessages(selectedGroup.id);
  setMessage("");
  } else {
@@ -236,7 +239,7 @@ const fetchMessages = (sender_id, receiver_id) => {
 };
 const fetchGroupMessages = (group_id) => {
   console.log("groupIdcr",group_id);
- fetch(`http://localhost:3005/group-messages? group_id=${group_id}`, {
+ fetch(`http://localhost:3005/group-messages?group_id=${group_id}`, {
  method: "GET",
  headers: {
  "Content-Type": "application/json",
@@ -247,6 +250,7 @@ const fetchGroupMessages = (group_id) => {
  if (Array.isArray(data)) {
  console.log("data",data);
  const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
+ console.log("groupMessage232",sortedMessages);
  setGroupMessages(sortedMessages);
  } else {
  console.error("Unexpected data format:", data);
@@ -540,6 +544,7 @@ setIsCreatingGroup={setIsCreatingGroup}
  <li onClick={handleClearChat}>Clear Group Chat</li>
  <li onClick={() => document.getElementById("wallpaperInput").click()}> Wallpaper</li>
  <input type="file" id="wallpaperInput" style={{ display: 'none' }} accept="image/*" onChange={handleChangeWallpaper}/>
+ {/* <li onClick={handleExistGroup}>Exist</li> */}
  <li onClick={handleReport}>Report</li>
  </>
  )}
@@ -549,8 +554,8 @@ setIsCreatingGroup={setIsCreatingGroup}
  <div className="chat-messages" id="chat-messages" style={{ backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover' }}>
  {(selectedUser ? messages : groupMessages).map((msg, index) => (
  <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
- <p>{msg.message_text}</p>
- {/* <span className="message-time">{formatDate(msg.sent_at)}</span> */}
+<span id="msg-name">{msg.name}</span> <p>{msg.message_text}</p>
+ <span className="message-time">{formatDate(msg.sent_at)}</span>
  {/* {msg.sender_id === sender_id && (
  <span className="message-status">
  {msg.is_read ? '✔✔' : '✔'}

@@ -77,7 +77,7 @@ const GroupCreationModal = ({
             }}
           />
           <img src={user.images } className="gprofile" /> 
-          {user.name}
+          {user.Name}
           </label>
         </li>
       ))}

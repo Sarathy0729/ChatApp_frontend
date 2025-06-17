@@ -18,6 +18,10 @@ const Sidebar = ({
   
  
 }) => {
+   const [search, setSearch] = useState("");
+   const Filteruser = chatList.filter((user)=> user.Name.toLowerCase().includes(search.toLowerCase()))
+    const FilterGroup = grouplist.filter((group)=> group.group_name.toLowerCase().includes(search.toLowerCase()))
+   console.log("searchinputvalue",search);
   console.log("name",name);
    const switchToDarkMode = () => {
  setTheme('dark');
@@ -42,10 +46,9 @@ const Sidebar = ({
          <div className="myprofile">
             <h3 id ="name">{name}</h3>
             </div>
-        </div>
-        <div className="menu-container">
+              <div className="menu-container">
           <button className="menu-button" onClick={toggleMenu}>⋮</button>
-          {/* {showMenu && <GroupCreationModal/> } */}
+          {/* {showMenu && <GroupCreationModal/> } .filter((user) => user.name !== name)*/}
           {showMenu && (
             <ul className='dropdown-menu'>
               <li onClick={()=>setIsCreatingGroup(true)}>New Group</li>
@@ -56,11 +59,14 @@ const Sidebar = ({
             </ul>
           )}
         </div>
-        <input type="text" id="search-input" placeholder="Search" />
+        </div>
+      
+        <input type="text" id="search-input" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)}/>
+      
       </header>
 
       <ul id="chat-list">
-        {chatList.map((user,index) => (
+        {Filteruser.map((user,index) => (
      <li key={index} className="chat-members" onClick={()=> openChat(user)} >
             <img src={user.images} alt={"profile pic"} className="profile" />
             <div className="chat-info"> 
@@ -69,11 +75,11 @@ const Sidebar = ({
             </div>
           </li>
         ))}
-        {grouplist.map((group, index) => (
+        {FilterGroup.map((group, index) => (
  <li key={index} className="chat-members" onClick={() => opengroupchat(group)}>
- <img src={''} alt="profile pic" className="profile" />
+ <img src={""} alt="profile pic" className="profile" />
  <div className="chat-info">
- <h2>{group.group_name}</h2>
+ <h2 >{group.group_name}</h2>
  </div>
  </li>
  ))}

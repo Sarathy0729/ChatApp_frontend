@@ -40,9 +40,10 @@
   margin-top: 15px;
   padding: 10px;
   border: 2px solid #1b3a57; 
-  border-radius: 5px;
+  border-radius: 50px;
   background-color: #f0f0f0; 
   color: #333; 
+
 }
 
 #chat-list {
@@ -63,6 +64,9 @@
 .chat-members:hover {
   background-color: #3c6382; 
 }
+/* #pro_name{
+  font-size: larger;
+} */
 
 .profile {
   width: 50px;
@@ -70,6 +74,7 @@
   border-radius: 50%;
   margin-right: 15px; 
   border: 2px solid #fff; 
+  background-color: #ccc;
 }
 .userprofile{
   width: 50px;
@@ -113,10 +118,10 @@
   display: flex;
   flex-direction: column;
   max-height: calc(100vh - 60px - 70px); 
-}
+} */
 
 
-.message {
+ .message {
   max-width: 65%; 
   padding: 12px 15px;
   border-radius: 8px;
@@ -141,13 +146,13 @@
 }
 
 
-.chat-input {
+/* .chat-input {
   display: flex;
   align-items: center;
   padding: 20px;
   border-top: 2px solid #1b3a57; 
   background-color: #274c77; 
-}
+} */
 .chat-input {
   display: flex;
   align-items: center;
@@ -171,7 +176,7 @@
 #send-button {
   padding: 12px 25px;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
   background-color: #007bff;
   color: #fff;
   cursor: pointer;
@@ -207,13 +212,20 @@
 #name {
   font-size: x-large;
 }
- .emoji {
+ /* .emoji {
+ 
   padding-right: 50px;
   display: flex;
   align-items: center;
-} 
+    width: 50px;
+}  */
 .emojiicon{
   padding-left: 10px;
+    border-radius: 70px;
+      /* position: static;
+  z-index: 10; */
+   
+
 }
 
 
@@ -221,6 +233,10 @@
   position: relative;
   display: inline-block;
   margin-left: auto;
+  /* margin-bottom: auto; */
+
+ 
+  
 }
 
 .menu-button {
@@ -264,7 +280,7 @@
   cursor: pointer;
   margin-left: auto;
   padding-bottom: 20px;
-  color: rgb(0, 0, 0); 
+  color: rgb(238, 233, 233); 
 }
 
 .options-menu {
@@ -273,7 +289,6 @@
   margin: 0;
   background-color: whitesmoke;
   color: #000000;
-
   position: absolute;
   top: 40px;
   right: 0;
@@ -520,8 +535,19 @@ color: #000000;
   height: 40px;
   border-radius: 50px;
  }
- 
- 
+  #msg-name{
+  font-size: smaller;
+  color: #0056b3; 
+  cursor: pointer;
+     /* float: left;  */
+  /* width: 300px; */
+  /* border: 3px solid #73AD21; */
+  /* padding: 10px; }*/
+  
+  }
+ /* .message-time {
+  font-size:smaller
+ } */
 
 
 
