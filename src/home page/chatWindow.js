@@ -37,7 +37,7 @@ const chatWindow =({
          <div className="chat-messages" id="chat-messages" style={{ backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover' }}>
          {(selectedUser ? messages : groupMessages).map((msg, index) => (
          <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
-         <p>{msg.message_text}</p>
+          {groupMessages && <span id="msg-name">{msg.Name}</span>}<p>{msg.message_text}</p>
          <span className="message-time">{formatDate(msg.sent_at)}</span>
          {/* {msg.sender_id === sender_id && (
          <span className="message-status">

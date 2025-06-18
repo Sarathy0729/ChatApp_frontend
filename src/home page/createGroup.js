@@ -12,7 +12,6 @@ const GroupCreationModal = ({
  
 }) => {
   console.log("chatListforgroup",chatList);
-  // const [groupName, setGroupName] = useState("");
    const handleCreateGroup = () => {
     console.log("helloGroup");
  if (!groupName || groupMembers.length === 0) {

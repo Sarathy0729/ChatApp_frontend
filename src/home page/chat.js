@@ -1,12 +1,8 @@
  import React, { useEffect, useState } from "react";
 import "./chatstyle.css";
-// import EmojiPickerContainer from "./emoji";
 import EmojiPicker from 'emoji-picker-react';
 import Sidebar from "./sideBar";
 import GroupCreationModal from "./createGroup";
-// import groupuser from '../images/group.png';
-
-
 const ChatApp = () => {
  const [name, setName] = useState(localStorage.getItem("checkname"));
  const [chatList, setChatList] = useState([]);
@@ -23,6 +19,7 @@ const ChatApp = () => {
  const [wallpaper, setWallpaper] = useState('');
  const [grouplist , setgrouplist]= useState([]);
  const [selectedGroup, setSelectedGroup] = useState();
+ console.log("selectedGroup.id",selectedGroup);
 const [groupMessages, setGroupMessages] = useState([]);
 const sender_id = localStorage.getItem("checkid");
 const [receiver_id, setReceiverId] = useState();
@@ -39,13 +36,7 @@ console.log("iscreategroup",isCreatingGroup);
  })
  .then((response) => response.json())
  .then((data) => setChatList(data))
- 
-
- .catch((error) => console.error("Error fetching user profile:", error));
- }, []);
-// -------groupList------
- useEffect(() => {
- fetch(`http://localhost:3005/group-info?user_id=${sender_id}`, {
+  fetch(`http://localhost:3005/group-info?user_id=${sender_id}`, {
  method: "GET",
  headers: {
  "Content-Type": "application/json",
@@ -54,8 +45,22 @@ console.log("iscreategroup",isCreatingGroup);
  .then((response) => response.json())
  .then((data) => setgrouplist(data))
  
+
  .catch((error) => console.error("Error fetching user profile:", error));
  }, []);
+// -------groupList------
+//  useEffect(() => {
+//  fetch(`http://localhost:3005/group-info?user_id=${sender_id}`, {
+//  method: "GET",
+//  headers: {
+//  "Content-Type": "application/json",
+//  },
+//  })
+//  .then((response) => response.json())
+//  .then((data) => setgrouplist(data))
+ 
+//  .catch((error) => console.error("Error fetching user profile:", error));
+//  }, []);
  
 // useEffect(() => {
 
@@ -81,7 +86,7 @@ console.log("iscreategroup",isCreatingGroup);
 // }, []);
 
 // useEffect(()=>{
-// fetch(`http://localhost:3005/group-messages?group_id=${group.id}`, {
+// fetch(`http://localhost:3005/group-messages?group_id=${selectedGroup.id}`, {
 // method: "GET",
 // headers: {
 // "Content-Type": "application/json",
@@ -170,7 +175,6 @@ const sendMessage = () => {
  if (selectedGroup) {
  
  const newMessage = { message_text: message, sender_id, group_id: selectedGroup.id };
- console.log("newMessage",newMessage);
  
  fetch("http://localhost:3005/send-group-message", {
  method: "POST",
@@ -182,7 +186,6 @@ const sendMessage = () => {
  .then((response) => response.json())
  .then((data) => {
  if (data.success) {
-  console.log("selectedGroup.idjbnjb",selectedGroup.id);
  fetchGroupMessages(selectedGroup.id);
  setMessage("");
  } else {
@@ -277,55 +280,7 @@ const fetchGroupMessages = (group_id) => {
  
  };
 
-// -------------createGroup----------
- 
-//  const handleCreateGroup = () => {
-//  if (!groupName || groupMembers.length === 0) {
-//  alert("Please enter a group name and select members.");
-//  return;
-//  }
- 
-//  const groupData = {
-//  groupName,
-//  groupMembers,
-//  createdBy: sender_id,
-//  };
-//  console.log("grouplist",groupData);
-//  console.log("groupname",groupName);
-//  console.log("groupmember",groupMembers);
-//  console.log("createdby",sender_id);
- 
-//  fetch("http://localhost:3005/create-group", {
-//  method: "POST",
-//  headers: {
-//  "Content-Type": "application/json",
-//  },
-//  body: JSON.stringify(groupData),
-//  })
-//  .then((response) => response.json())
-//  .then((data) => {
-//  if (data.success) {
-//  alert("Group created successfully:", data.groupId);
- 
-//  setIsCreatingGroup(false);
-//  setGroupName("");
-//  setGroupMembers([]);
 
- 
- 
-//  } else {
-//  console.error("Failed to create group:", data.error);
-//  }
-//  })
-//  .catch((error) => console.error("Error creating group:", error));
-//  };
- 
- const handleSetting =() =>{};
-
- const handleLogout =() =>{
- localStorage.clear(); 
- window.location.href = 'http://localhost:3000/'; 
-};
 
  const toggleOptionsMenu = () => {
  setShowOptionsMenu(!showOptionsMenu);
@@ -375,33 +330,11 @@ const handleChangeWallpaper = (event) => {
  const handleReport = () => {
  console.log("Report clicked");
  };
-// --------theme--------
-
-//  const switchToDarkMode = () => {
-//  setTheme('dark');
-//  };
-
-//  const switchToLightMode = () => {
-//  setTheme('light');
-//  };
+ 
    const handleEmojiClick = (emojiData) => {
     setMessage((prev) => prev + emojiData.emoji);
     setShowEmojiPicker(false);
   };
-// const handleImageChange = (event) => {
-// const file = event.target.files[0];
-// if (file) {
-// const reader = new FileReader();
-// reader.onload = () => {
-// setImages(reader.result); // Set the image in the state
-// // Optionally send the image to the server to update the profile
-// updateUserProfileImage(reader.result);
-// };
-// reader.readAsDataURL(file);
-// }
-// };
-
-
 
  return (
  <div className={`app-container ${theme}`}>
@@ -427,98 +360,7 @@ setGroupName={setGroupName}
 setGroupMembers={setGroupMembers}
 setIsCreatingGroup={setIsCreatingGroup}
  />)}
-  
 
-
- {/* <nav className="sidebar">
- <header className="sidebar-header">
- <div className="profile-container">
- <img src={image }alt="Your Profile" className="profile" />
- <div className="myprofile">
- <h3 id="name">{name}</h3>
- </div>
- </div> */}
- {/* ----profile----- */}
-
- {/* <div className="menu-container">
- <button className="menu-button" onClick={toggleMenu}>⋮</button>
- {showMenu && (
- <ul className="dropdown-menu">
- 
- <li onClick={() => setIsCreatingGroup(true)}>New Group</li> */}
-
-
-  {/* {isCreatingGroup && (
- <div className="group-creation-modal">
- <h2>Create New Group</h2>
- <input type="text" placeholder="Enter group name" value={groupName} onChange={(e) => setGroupName(e.target.value)} />
- <ul className="user-selection-list">
- {chatList.map((user) => (
- <li key={user.id}>
- <label> 
- 
-  <input type="checkbox" value={user.id} onChange={(e) => {
- const userId = e.target.value;
- console.log("userId",userId);
- if (e.target.checked) {
- console.log("check",e.target.checked);
- setGroupMembers([...groupMembers, userId]);
- console.log("groupMembers",userId);
- } else {
- setGroupMembers(groupMembers.filter((id) => id !== userId));
- }
- }}
- />
- <img src={user.images } className="gprofile" /> */}
-
-  {/* {user.name}
- </label>
- </li>
- ))}
- </ul>
- <button onClick={handleCreateGroup}>Create Group</button>
- <button onClick={() => setIsCreatingGroup(false)}>Cancel</button>
- </div>
-)}  */}
-   
- 
-
-
- {/* <li onClick={handleSetting}>Settings</li>
- <li onClick={handleLogout}>Logout</li>
- 
- <li onClick={switchToDarkMode}>Dark Mode</li>
- <li onClick={switchToLightMode}>Light Mode</li>
- </ul>
- )}
- </div> */}
- {/* -----toggleMenu------ */}
- 
- {/* {/* <input type="text" id="search-input" placeholder="Search" />
- </header> */}
- {/* ------Headers-------- */}
-
- {/* <ul id="chat-list">
- {chatList.map((user, index) => (
- <li key={index} className="chat-members" onClick={() => openChat(user)}>
- <img src={user.images} alt="profile pic" className="profile" />
- <div className="chat-info">
- <h2>{user.name}</h2>
- </div>
- </li>
- ))} */}
- {/* {grouplist.map((group, index) => (
- <li key={index} className="chat-members" onClick={() => opengroupchat(group)}>
- <img src={''} alt="profile pic" className="profile" />
- <div className="chat-info">
- <h2>{group.group_name}</h2>
- </div>
- </li>
- ))} */}
- {/* </ul> */}
- {/* <h1> Hello</h1> */}
- {/* </nav> */}
- {/* ------sidenav----- */}
  <div className="chat-window">
  {(selectedUser || selectedGroup) && (
  <>

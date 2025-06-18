@@ -34,9 +34,7 @@ const Sidebar = ({
  window.location.href = 'http://localhost:3000/'; 
 };
  const handleSetting =() =>{console.log("Hello")};
-//  const [isCreatingGroup,setisCreatingGroup]=useState(false);
-//  console.log("createGroup",isCreatingGroup);
-    // const [showMenu, setShowMenu] = useState(false); 
+
 
   return (
 <nav className="sidebar">
@@ -48,11 +46,9 @@ const Sidebar = ({
             </div>
               <div className="menu-container">
           <button className="menu-button" onClick={toggleMenu}>⋮</button>
-          {/* {showMenu && <GroupCreationModal/> } .filter((user) => user.name !== name)*/}
           {showMenu && (
             <ul className='dropdown-menu'>
               <li onClick={()=>setIsCreatingGroup(true)}>New Group</li>
-              {/* <li onClick={handleSetting}>Settings</li> */}
               <li onClick={handleLogout}>Logout</li>
               <li onClick={switchToDarkMode}>Dark Mode</li>
               <li onClick={switchToLightMode}>Light Mode</li>
