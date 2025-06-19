@@ -3,6 +3,7 @@ import "./chatstyle.css";
 import EmojiPicker from 'emoji-picker-react';
 import Sidebar from "./sideBar";
 import GroupCreationModal from "./createGroup";
+
 const ChatApp = () => {
  const [name, setName] = useState(localStorage.getItem("checkname"));
  const [chatList, setChatList] = useState([]);
@@ -10,7 +11,6 @@ const ChatApp = () => {
  const [message, setMessage] = useState("");
  const [messages, setMessages] = useState([]);
  const [showEmojiPicker, setShowEmojiPicker] = useState();
- const [showMenu, setShowMenu] = useState(); 
  const [showOptionsMenu, setShowOptionsMenu] = useState(); 
  const [theme, setTheme] = useState();
  const [isCreatingGroup, setIsCreatingGroup] = useState();
@@ -19,12 +19,16 @@ const ChatApp = () => {
  const [wallpaper, setWallpaper] = useState('');
  const [grouplist , setgrouplist]= useState([]);
  const [selectedGroup, setSelectedGroup] = useState();
- console.log("selectedGroup.id",selectedGroup);
+ const [group_members,setgroupmembers]=useState();
+ console.log("group_members12345",group_members);
+
 const [groupMessages, setGroupMessages] = useState([]);
 const sender_id = localStorage.getItem("checkid");
 const [receiver_id, setReceiverId] = useState();
 const [image, setImages] = useState(localStorage.getItem("checkimage"));
-console.log("iscreategroup",isCreatingGroup);
+const [members,setMembers]= useState();
+console.log("members",members);
+
 
 
  useEffect(() => {
@@ -115,8 +119,8 @@ console.log("iscreategroup",isCreatingGroup);
 
  setReceiverId(user.id);
  setSelectedUser(user);
-  console.log("user.id22",user.id);
-  console.log("user",user);
+  // console.log("user.id22",user.id);
+  // console.log("user",user);
 
 
  fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${user.id}`, {
@@ -142,8 +146,9 @@ console.log("iscreategroup",isCreatingGroup);
 // ----select groupchat------
 
 const opengroupchat = (group) => {
-  console.log("group",group);
+  // console.log("group",group);
  setSelectedGroup(group);
+ setSelectedUser(null);
 
  fetch(`http://localhost:3005/group-messages?group_id=${group.id}`, {
  method: "GET",
@@ -188,6 +193,7 @@ const sendMessage = () => {
  if (data.success) {
  fetchGroupMessages(selectedGroup.id);
  setMessage("");
+ 
  } else {
  console.error("Failed to send group message:", data.error);
  }
@@ -221,7 +227,7 @@ const sendMessage = () => {
 
 // --------fetchMessages-------------------------
 const fetchMessages = (sender_id, receiver_id) => {
-    console.log("sender_id",sender_id);
+    // console.log("sender_id",sender_id);
  fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
  method: "GET",
  headers: {
@@ -251,10 +257,11 @@ const fetchGroupMessages = (group_id) => {
  .then((response) => response.json())
  .then((data) => {
  if (Array.isArray(data)) {
- console.log("data",data);
+//  console.log("data",data);
  const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
  console.log("groupMessage232",sortedMessages);
  setGroupMessages(sortedMessages);
+
  } else {
  console.error("Unexpected data format:", data);
  setGroupMessages([]);
@@ -273,14 +280,6 @@ const fetchGroupMessages = (group_id) => {
  const onEmojiClick = (emojiObject) => {
  setMessage((prevMessage) => prevMessage + emojiObject.emoji);
  };
-
- const toggleMenu = () => {
-  console.log("Toogle_Menu");
- setShowMenu(!showMenu);
- 
- };
-
-
 
  const toggleOptionsMenu = () => {
  setShowOptionsMenu(!showOptionsMenu);
@@ -310,6 +309,34 @@ const fetchGroupMessages = (group_id) => {
  .catch((error) => console.error("Error clearing chat:", error));
  
  };
+
+ const openStatus =()=>{
+  console.log("groupmembers",group_members)
+  setMembers(!members);
+  if(selectedGroup){
+  console.log("selectedGroup is check",selectedGroup.id)
+  console.log("checkmembers")
+  fetch(`http://localhost:3005/group-members?group_id=${selectedGroup.id}`,{
+    method:"GET",
+    headers:{
+       "Content-Type": "application/json",
+      }
+    }
+
+  )
+  .then((response) => response.json())
+  .then((data)=>{setgroupmembers(data)})
+}
+else{
+  // setMembers(members)
+}
+  
+  
+ }
+
+
+  
+//  }
 
  const handleBlockUser = () => {
  console.log("Block clicked");
@@ -342,8 +369,6 @@ const handleChangeWallpaper = (event) => {
   name={name}
   image={image}
   chatList={chatList}
-  toggleMenu={toggleMenu}
-  showMenu={showMenu}
    setTheme={setTheme}
     openChat={openChat}
     opengroupchat={opengroupchat}
@@ -365,8 +390,10 @@ setIsCreatingGroup={setIsCreatingGroup}
  {(selectedUser || selectedGroup) && (
  <>
  <div className="chat-header">
+  <span  className="chat-user" onClick={()=> openStatus()} >
  <img src={selectedUser ? selectedUser.images : ''} alt="profile" className="profile" id="chat-header-image" />
  <h2 id="chat-header-name">{selectedUser ? selectedUser.Name : selectedGroup.group_name}</h2>
+ </span>
  <button className="options-button" onClick={toggleOptionsMenu}>⋮</button>
  {showOptionsMenu && (
  <ul className="options-menu">
@@ -393,10 +420,33 @@ setIsCreatingGroup={setIsCreatingGroup}
  </ul>
  )}
  </div>
+ {members && <div>
+ {selectedUser &&
+  <ul>
+  <li><img src={selectedUser.images} alt="Profile-Pic"/></li>
+  <li>Name      : {selectedUser.Name}</li>
+  <li>Email     : {selectedUser.gmail}</li>
+  <li>Create_at : {selectedUser.create_at}</li>
+  </ul> 
+}
+
+{selectedGroup && 
+<ul>
+  {/* {group_members.map((group,index)=>(
+    <li key={index}>group.Name</li>
+  ))} */}
+     <li><img src={''} alt="Profile-Pic"/></li>
+    <li>Name      : {selectedGroup.group_name}</li> 
+     {/* <li> {group_members[0].Name}</li>  */}
+    
+     </ul>
+}
+ </div>
+ }
  <div className="chat-messages" id="chat-messages" style={{ backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover' }}>
  {(selectedUser ? messages : groupMessages).map((msg, index) => (
  <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
-<span id="msg-name">{msg.name}</span> <p>{msg.message_text}</p>
+{!selectedUser && <span id="msg-name">{msg.name}</span>}<p>{msg.message_text}</p>
  <span className="message-time">{formatDate(msg.sent_at)}</span>
  {/* {msg.sender_id === sender_id && (
  <span className="message-status">

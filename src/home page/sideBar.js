@@ -7,9 +7,9 @@ const Sidebar = ({
   name,
   image,
   chatList,
-  toggleMenu,
+  // toggleMenu,
   openChat,
-  showMenu,
+  // showMenu,
   setIsCreatingGroup,
   setTheme,
   opengroupchat,
@@ -19,6 +19,7 @@ const Sidebar = ({
  
 }) => {
    const [search, setSearch] = useState("");
+    const [showMenu, setShowMenu] = useState();
    const Filteruser = chatList.filter((user)=> user.Name.toLowerCase().includes(search.toLowerCase()))
     const FilterGroup = grouplist.filter((group)=> group.group_name.toLowerCase().includes(search.toLowerCase()))
    console.log("searchinputvalue",search);
@@ -34,6 +35,11 @@ const Sidebar = ({
  window.location.href = 'http://localhost:3000/'; 
 };
  const handleSetting =() =>{console.log("Hello")};
+  const toggleMenu = () => {
+  console.log("Toogle_Menu");
+ setShowMenu(!showMenu);
+ 
+ };
 
 
   return (

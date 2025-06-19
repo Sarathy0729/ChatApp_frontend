@@ -60,6 +60,14 @@
   border-bottom: 1px solid #1b3a57; 
   cursor: pointer;
 }
+.chat-user{
+   display: flex;
+  align-items: center;
+  padding: 15px;
+  /* border-bottom: 1px solid #1b3a57;  */
+  cursor: pointer;
+
+}
 
 .chat-members:hover {
   background-color: #3c6382; 
@@ -172,6 +180,9 @@
   font-size: 16px;
   color: #333; 
 }
+#chat-header-name{
+   text-shadow: 0 0 3px #583f3f10;
+}
 
 #send-button {
   padding: 12px 25px;
@@ -211,6 +222,7 @@
 
 #name {
   font-size: x-large;
+  text-shadow: 0 0 3px #583f3f10;
 }
  /* .emoji {
  
@@ -406,6 +418,10 @@
   flex-direction: column;
   max-height: calc(100vh - 60px - 70px);
 }
+.message-time {
+  font-size: small;
+  
+}
 
 .message {
   max-width: 60%; 
@@ -414,7 +430,6 @@
   margin-bottom: 10px; 
   word-wrap: break-word;
   display: inline-block;
- 
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
 }
 
