@@ -8,29 +8,36 @@ const Info = ({
     group_members
  
 }) => {
+  const[add,setAdd]=useState()
+  console.log(add);
     console.log("hsdlnvldkvnljkdf",selectedGroup);
     const handleAddMembers = ()=>{
-       
+      setAdd(!add)       
         
     }
     const handleRemoveMembers =(group)=>{
         console.log("remove.id",group);
+        const group_id = selectedGroup.id;
+        console.log("user_id",group_id);
         console.log("hello");
-         fetch(`http://localhost:3005/remove_members?group_id=${selectedGroup.id}&member_id=${group}`,{
+         fetch(`http://localhost:3005/remove_member`,{
             method:"post",
             headers:{
                 "Content-Type":"application/json",
-            }      
+            },
+             body: JSON.stringify({group_id , group }),  
+
         })
         .then((response) => response.json())
  .then((data) => {
  if (data.success) {
- console.log("Chat cleared successfully");
+ console.log("Removed succefully");
+
  } else {
- console.error("Failed to clear chat:", data.error);
+ console.log("Failed to Remove Members:", data.error);
  }
  })
- .catch((error) => console.error("Error clearing chat:", error));
+ .catch((error) => console.log("Error clearing chat:", error));
         
     }
     
