@@ -3,6 +3,7 @@ import "./chatstyle.css";
 import EmojiPicker from 'emoji-picker-react';
 import Sidebar from "./sideBar";
 import GroupCreationModal from "./createGroup";
+import Info from './info'
 
 const ChatApp = () => {
  const [name, setName] = useState(localStorage.getItem("checkname"));
@@ -26,8 +27,8 @@ const [groupMessages, setGroupMessages] = useState([]);
 const sender_id = localStorage.getItem("checkid");
 const [receiver_id, setReceiverId] = useState();
 const [image, setImages] = useState(localStorage.getItem("checkimage"));
-const [members,setMembers]= useState();
-console.log("members",members);
+const [Is_info,setIs_info]= useState();
+console.log("members",Is_info);
 
 
 
@@ -119,6 +120,7 @@ console.log("members",members);
 
  setReceiverId(user.id);
  setSelectedUser(user);
+ setSelectedGroup(null);
   // console.log("user.id22",user.id);
   // console.log("user",user);
 
@@ -312,7 +314,7 @@ const fetchGroupMessages = (group_id) => {
 
  const openStatus =()=>{
   console.log("groupmembers",group_members)
-  setMembers(!members);
+  setIs_info(!Is_info);
   if(selectedGroup){
   console.log("selectedGroup is check",selectedGroup.id)
   console.log("checkmembers")
@@ -326,17 +328,9 @@ const fetchGroupMessages = (group_id) => {
   )
   .then((response) => response.json())
   .then((data)=>{setgroupmembers(data)})
-}
-else{
-  // setMembers(members)
-}
-  
-  
+} 
  }
 
-
-  
-//  }
 
  const handleBlockUser = () => {
  console.log("Block clicked");
@@ -362,6 +356,9 @@ const handleChangeWallpaper = (event) => {
     setMessage((prev) => prev + emojiData.emoji);
     setShowEmojiPicker(false);
   };
+  const handleAddmembers=()=>{
+    console.log("aaaa");
+  }
 
  return (
  <div className={`app-container ${theme}`}>
@@ -420,30 +417,12 @@ setIsCreatingGroup={setIsCreatingGroup}
  </ul>
  )}
  </div>
- {members && <div>
- {selectedUser &&
-  <ul>
-  <li><img src={selectedUser.images} alt="Profile-Pic"/></li>
-  <li>Name      : {selectedUser.Name}</li>
-  <li>Email     : {selectedUser.gmail}</li>
-  <li>Create_at : {selectedUser.create_at}</li>
-  </ul> 
-}
-
-{selectedGroup && 
-<ul>
-  {/* {group_members.map((group,index)=>(
-    <li key={index}>group.Name</li>
-  ))} */}
-     <li><img src={''} alt="Profile-Pic"/></li>
-    <li>Name      : {selectedGroup.group_name}</li> 
-     {/* <li> {group_members[0].Name}</li>  */}
-    
-     </ul>
-}
- </div>
- }
- <div className="chat-messages" id="chat-messages" style={{ backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover' }}>
+ <Info Is_info={Is_info}
+ group_members={group_members}
+ selectedGroup={selectedGroup}
+ selectedUser={selectedUser}
+ />
+<div className="chat-messages" id="chat-messages" style={{ backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover' }}>
  {(selectedUser ? messages : groupMessages).map((msg, index) => (
  <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
 {!selectedUser && <span id="msg-name">{msg.name}</span>}<p>{msg.message_text}</p>

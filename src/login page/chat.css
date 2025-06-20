@@ -333,12 +333,12 @@ a:link {
 
 
 
-/* 
+ 
 
-body {
+.login{
     margin: 0;
     padding: 0;
-    background: linear-gradient(to right, #74ebd5, #ACB6E5);
+    /* background: linear-gradient(to right, #74ebd5, #ACB6E5); */
     background-repeat: no-repeat;
     background-size: cover;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -346,17 +346,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-} */
+} 
 
 /* Container for Login Form */
-body {
+/* body {
    
     background-repeat: no-repeat;
     background-size: cover;
      font-family: Georgia, 'Times New Roman', Times, serif; 
      height: 100vh;
     
-}
+} */
 .container {
     width: 380px;
     padding: 30px 40px;

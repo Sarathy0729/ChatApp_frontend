@@ -44,6 +44,7 @@ function LoginForm() {
   };
 
   return (
+    <div className='login'>
     <div className="container">
       <h3> Chat App</h3>
 
@@ -64,6 +65,7 @@ function LoginForm() {
         <Link to="/forgetpassword">Forgot Password</Link>
     
       </form>
+    </div>
     </div>
   );
 }
