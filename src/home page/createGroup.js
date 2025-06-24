@@ -28,6 +28,7 @@ const GroupCreationModal = ({
  console.log("groupname",groupName);
  console.log("groupmember",groupMembers);
  console.log("createdby",sender_id);
+ console.log("ccreateggroupp",groupData);
  
  fetch("http://localhost:3005/create-group", {
  method: "POST",
@@ -39,7 +40,7 @@ const GroupCreationModal = ({
  .then((response) => response.json())
  .then((data) => {
  if (data.success) {
- alert("Group created successfully:", data.groupId);
+ alert("Group created successfully");
  
  setIsCreatingGroup(false);
  setGroupName("");
