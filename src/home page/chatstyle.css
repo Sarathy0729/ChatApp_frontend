@@ -175,10 +175,11 @@
   border: none;
   border-radius: 20px;
   padding: 12px;
-  margin-right: 10px;
+  margin-right: 20px;
   background-color: #f4f4f9; 
   font-size: 16px;
   color: #333; 
+  
 }
 #chat-header-name{
    text-shadow: 0 0 3px #583f3f10;
@@ -302,7 +303,7 @@
   background-color: whitesmoke;
   color: #000000;
   position: absolute;
-  top: 40px;
+  top: 70px;
   right: 0;
   border-radius: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); 
@@ -342,7 +343,7 @@
   color: #333;
 }
 
-.group-creation-modal input[type="text"] {
+.group-creation-modal  {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
@@ -395,7 +396,7 @@
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge, and Firefox */
+
 .chat-messages {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
@@ -563,6 +564,45 @@ color: #000000;
  /* .message-time {
   font-size:smaller
  } */
+  .member-info{
+ position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 10px;
+   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);  
+   z-index: 1000; 
+  width: 400px;
+  max-width: 90%;
+  }
+.GroupName{
+  font-size: x-large;
+ font-style: italic;
+ color: #274c77;
 
-
-
+}
+.list{
+  list-style-type: none;
+}
+.user-info{
+    font-size:large;
+ /* font-style: italic;
+ color: #274c77; */
+}
+.user-info-pro{
+    width: 60px;
+  height: 60px;
+  border-radius: 50px;
+  text-align: center;
+  padding-right: 50%;
+}
+.username{
+  font-style: italic;
+}
+.icon{
+height: auto;
+width: auto;
+color: #0056b3;
+}

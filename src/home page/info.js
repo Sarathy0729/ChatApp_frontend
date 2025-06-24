@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { CgProfile } from "react-icons/cg";
+import { MdAttachEmail } from "react-icons/md";
+import { IoIosCreate } from "react-icons/io";
+import { IoPersonAddOutline } from "react-icons/io5";
 
 
 const Info = ({
@@ -10,14 +14,16 @@ const Info = ({
 }) => {
   console.log("selectedgroup",selectedGroup);
   const[addUsers,setAddUsers]=useState();
+  // console.log("conditioncheck",addUsers);
   const[addgroupMembers,setaddgroupMembers]=useState([]);
-   console.log("addusers923292829482398",addgroupMembers);
+  //  console.log("addusers923292829482398",addgroupMembers);
   const[allUsers,setAllUsers]=useState();
-  console.log("allUsers",allUsers);
+  // console.log("allUsers",allUsers);
   const [groupMembersinfo,setgroupMembersinfo]=useState(group_members );
+  console.log("groupMembers23232",groupMembersinfo);
 
-  console.log("Helloworld",groupMembersinfo);
-    console.log("hsdlnvldkvnljkdf",selectedGroup);
+  // console.log("Helloworld1234",groupMembersinfo);
+  //   console.log("hsdlnvldkvnljkdf",selectedGroup);
 
       useEffect(() => {
     setgroupMembersinfo(group_members );
@@ -48,6 +54,7 @@ const Info = ({
         .then((response)=> response.json())
         .then((data)=>{
           if(data.success){
+              setAddUsers(false) 
               
             console.log("add member successfully");
           }
@@ -74,7 +81,7 @@ const Info = ({
  .then((data) => {
  
  if (data.success) {
-    setgroupMembersinfo(data)
+    setgroupMembersinfo(null)
  console.log("Removed succefully");
  console.log("helloconsole");
 
@@ -85,41 +92,44 @@ const Info = ({
  .catch((error) => console.log("Error clearing chat:", error));
         
     }
-    
+  
   return (
   <div>
     {Is_info && <div className = "member-info">
  {selectedUser &&
-  <ul>
-  <li><img src={selectedUser.images} alt="Profile-Pic"/></li>
-  <li>Name      : {selectedUser.Name}</li>
-  <li>Email     : {selectedUser.gmail}</li>
-  <li>Create_at : {selectedUser.create_at}</li>
+  <ul className="list">
+  <li ><img src={selectedUser.images } alt="Profile-Pic" className="user-info-pro" />
+
+  </li>
+  <li className="user-info"> <span className="icon"> <CgProfile /> </span><strong>{selectedUser.Name}</strong></li>
+  <li className="user-info"> <span className="icon"> <MdAttachEmail /> </span> {selectedUser.gmail}</li>
+  <li className="user-info"> <span className="icon"> <IoIosCreate /> </span> {selectedUser.create_at}</li>
+  
   </ul> 
 }
 
 {selectedGroup && groupMembersinfo && groupMembersinfo.length > 0 && (
       <div>
-        <h4>Group: {selectedGroup.group_name}</h4>
-        <h3><button onClick={()=>{handleAddMembers()}}>+Add</button></h3>
-        <ul>
+        <h4 className="GroupName">Group: {selectedGroup.group_name}</h4>
+        <button onClick={()=>{handleAddMembers()}}><IoPersonAddOutline /></button>
+        <ul className="list">
           {groupMembersinfo.map((group, index) => (
             <li key={index}>
-              <img src={group.images || ""} alt="Member Profile" width="40" height="40" />
+              <img src={group.images || ""} alt=" Profile" width="40" height="40" />
               <span>{group.Name}</span> <span><button onClick={()=>{handleRemoveMembers(group.user_id)}}>Remove</button></span>
             </li>
           ))}
         </ul>
       </div>
     )}
-    {selectedGroup && addUsers &&(
+    { addUsers && selectedGroup &&(
       <div>
-        <ul>
+        <ul className="">
         {allUsers.map((user,index)=>(
-          <li key={index}   >
+          <li key={index} className="chat-members"  >
             <label>
            
-          <input type="checkbox"  value={user.id}  onChange={(e) => {
+          <input type="checkbox" className="addusers" value={user.id}  onChange={(e) => {
               const userId = e.target.value;
               if (e.target.checked) {
 

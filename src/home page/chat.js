@@ -4,6 +4,7 @@ import EmojiPicker from 'emoji-picker-react';
 import Sidebar from "./sideBar";
 import GroupCreationModal from "./createGroup";
 import Info from './info'
+import { RiEmojiStickerFill } from "react-icons/ri";
 
 const ChatApp = () => {
  const [name, setName] = useState(localStorage.getItem("checkname"));
@@ -11,6 +12,7 @@ const ChatApp = () => {
  const [selectedUser, setSelectedUser] = useState();
  const [message, setMessage] = useState("");
  const [messages, setMessages] = useState([]);
+ console.log("messages.id",messages);
  const [showEmojiPicker, setShowEmojiPicker] = useState();
  const [showOptionsMenu, setShowOptionsMenu] = useState(); 
  const [theme, setTheme] = useState();
@@ -18,6 +20,7 @@ const ChatApp = () => {
  const [groupMembers, setGroupMembers] = useState([]);
  const [groupName, setGroupName] = useState("");
  const [wallpaper, setWallpaper] = useState('');
+ console.log("Wallpaper",wallpaper);
  const [grouplist , setgrouplist]= useState([]);
  const [selectedGroup, setSelectedGroup] = useState();
  const [group_members,setgroupmembers]=useState();
@@ -29,6 +32,10 @@ const [receiver_id, setReceiverId] = useState();
 const [image, setImages] = useState(localStorage.getItem("checkimage"));
 const [Is_info,setIs_info]= useState();
 console.log("members",Is_info);
+const[msg_id,setMsg_id]=useState();
+console.log("msg_idjnkdvnevfjn",msg_id);
+const messageId = messages.map((msg,index)=>(msg.id))
+console.log("messages",messageId);
 
 
 
@@ -88,7 +95,7 @@ console.log("members",Is_info);
 // })
 // .catch((error) => console.error("Error fetching messages:", error));
  
-// }, []);
+// }, [messages]);
 
 // useEffect(()=>{
 // fetch(`http://localhost:3005/group-messages?group_id=${selectedGroup.id}`, {
@@ -121,8 +128,7 @@ console.log("members",Is_info);
  setReceiverId(user.id);
  setSelectedUser(user);
  setSelectedGroup(null);
-  // console.log("user.id22",user.id);
-  // console.log("user",user);
+
 
 
  fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${user.id}`, {
@@ -139,7 +145,10 @@ console.log("members",Is_info);
  setMessages(sortedMessages);
  } else {
  console.error("Unexpected data format:", data);
+ const messageId = messages.map((msg,index)=>(setMsg_id(msg.id)))
+console.log("messages",messageId);
  setMessages([]);
+
  }
  })
  .catch((error) => console.error("Error fetching messages:", error));
@@ -338,6 +347,7 @@ const fetchGroupMessages = (group_id) => {
 
 const handleChangeWallpaper = (event) => {
  const file = event.target.files[0];
+ console.log("message_id",msg_id);
  if (file) {
  const reader = new FileReader();
  reader.onload = (e) => {
@@ -345,19 +355,51 @@ const handleChangeWallpaper = (event) => {
  };
  reader.readAsDataURL(file);
  }
- };
+ fetch(`http://localhost:3005/wallpaper?message_id${msg_id}`,{
+  method:"Post",
+  headers:{
+    "Content-Type":"application/json",
+  }
+
+ })
+ .then((response)=> response.json())
+ .then((data)=>{console.log("wallpaper upload successfully")})
+  };
 
 
  const handleReport = () => {
  console.log("Report clicked");
  };
  
-   const handleEmojiClick = (emojiData) => {
-    setMessage((prev) => prev + emojiData.emoji);
-    setShowEmojiPicker(false);
-  };
-  const handleAddmembers=()=>{
-    console.log("aaaa");
+  //  const handleEmojiClick = (emojiData) => {
+  //   setMessage((prev) => prev + emojiData.emoji);
+  //   setShowEmojiPicker(false);
+  // };
+  // const handleAddmembers=()=>{
+  //   console.log("aaaa");
+  // }
+  const handleClear =(id)=>{
+    setMsg_id(id);
+    console.log("clear_message",id);
+    const ID = id;
+
+     fetch(`http://localhost:3005/clear-singlemsg?userid=${ID}`,{
+      method:"DELETE",
+      headers:{
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response)=> response.json())
+    .then((data)=>{
+      if(data.success){
+        console.log("cleared")
+         fetchMessages(sender_id, receiver_id);
+      }
+      else {
+ console.error("Failed to clear chat:");
+ }
+
+    })
   }
 
  return (
@@ -396,7 +438,7 @@ setIsCreatingGroup={setIsCreatingGroup}
  <ul className="options-menu">
  {selectedUser && (
  <>
- <li onClick={handleClearChat}>Clear Chat</li>
+ <li onClick={handleClearChat}>Clear All Chat</li>
  <li onClick={handleBlockUser}>Block</li>
  
  <li onClick={() => document.getElementById("wallpaperInput").click()}> Wallpaper</li>
@@ -423,16 +465,20 @@ setIsCreatingGroup={setIsCreatingGroup}
  selectedUser={selectedUser}
  />
 <div className="chat-messages" id="chat-messages" style={{ backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover' }}>
- {(selectedUser ? messages : groupMessages).map((msg, index) => (
+ {(selectedUser ? messages : groupMessages).map((msg, index) => (  
  <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
-{!selectedUser && <span id="msg-name">{msg.name}</span>}<p>{msg.message_text}</p>
+{!selectedUser && <span id="msg-name">{msg.name}</span>}
+<p onClick={()=>{handleClear(msg.id)}}>{msg.message_text} </p>
  <span className="message-time">{formatDate(msg.sent_at)}</span>
  {/* {msg.sender_id === sender_id && (
  <span className="message-status">
  {msg.is_read ? '✔✔' : '✔'}
  </span>
  )} */}
+
  </div>
+ 
+
  ))}
  </div>
  </>
