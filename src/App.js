@@ -28,15 +28,12 @@ function App() {
           <Route path="/createacc" element={<CreateAccount />} />
           <Route path="/forgetpassword" element={<ChangePassword />} />
           <Route path="/chat" element={<ChatApp />} />
-           {/* <Route path="/img" element={<img.jpg />} />  */}
-          {/* <Route path="/group" element={<Group />} /> */}
-          
-
-           {/* <Route path="/chat" element={<ChatWindow/>} /> */}
+         
           
         
       </Routes>
     </BrowserRouter>
+      {/* <div className="text-red-400">Hello world</div> */}
       
         
       

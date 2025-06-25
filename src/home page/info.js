@@ -3,6 +3,7 @@ import { CgProfile } from "react-icons/cg";
 import { MdAttachEmail } from "react-icons/md";
 import { IoIosCreate } from "react-icons/io";
 import { IoPersonAddOutline } from "react-icons/io5";
+import { FcSearch } from "react-icons/fc";
 
 
 const Info = ({
@@ -14,6 +15,8 @@ const Info = ({
 }) => {
   console.log("selectedgroup",selectedGroup);
   const[addUsers,setAddUsers]=useState();
+  const[is_namechange,setnamechange]=useState(false);
+  console.log("is_namechangeww",is_namechange);
   // console.log("conditioncheck",addUsers);
   const[addgroupMembers,setaddgroupMembers]=useState([]);
   //  console.log("addusers923292829482398",addgroupMembers);
@@ -31,6 +34,7 @@ const Info = ({
       .then((res) => res.json())
       .then((data) => setAllUsers(data));
   }, [group_members]);
+  // useEffect(()=>{}),[is_namechange];
 
 
 
@@ -98,11 +102,15 @@ const Info = ({
     {Is_info && <div className = "member-info">
  {selectedUser &&
   <ul className="list">
-  <li ><img src={selectedUser.images } alt="Profile-Pic" className="user-info-pro" />
+  <li ><FcSearch /><img src={selectedUser.images } alt="Profile-Pic" placeholder ="Search" className="user-info-pro" /></li>
 
-  </li>
-  <li className="user-info"> <span className="icon"> <CgProfile /> </span><strong>{selectedUser.Name}</strong></li>
+  <br></br>
+  <li className="user-info"> <span className="icon"> <CgProfile size={20}/> </span><strong onClick={()=>{setnamechange(!is_namechange)}}> <input type ="text" value={selectedUser.Name} /></strong> 
+  {is_namechange && <input type="text"/>}</li>
+
+  <br></br>
   <li className="user-info"> <span className="icon"> <MdAttachEmail /> </span> {selectedUser.gmail}</li>
+  <br></br>
   <li className="user-info"> <span className="icon"> <IoIosCreate /> </span> {selectedUser.create_at}</li>
   
   </ul> 
@@ -111,7 +119,7 @@ const Info = ({
 {selectedGroup && groupMembersinfo && groupMembersinfo.length > 0 && (
       <div>
         <h4 className="GroupName">Group: {selectedGroup.group_name}</h4>
-        <button onClick={()=>{handleAddMembers()}}><IoPersonAddOutline /></button>
+        <button onClick={()=>{handleAddMembers()}}><IoPersonAddOutline size={20}/></button>
         <ul className="list">
           {groupMembersinfo.map((group, index) => (
             <li key={index}>
@@ -123,10 +131,12 @@ const Info = ({
       </div>
     )}
     { addUsers && selectedGroup &&(
+      
+      
       <div>
-        <ul className="">
+        <ul className="Add_Users">
         {allUsers.map((user,index)=>(
-          <li key={index} className="chat-members"  >
+          <li key={index} className="chat-members-add"  >
             <label>
            
           <input type="checkbox" className="addusers" value={user.id}  onChange={(e) => {

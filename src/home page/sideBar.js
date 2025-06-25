@@ -46,7 +46,8 @@ const Sidebar = ({
 <nav className="sidebar">
 <header className="sidebar-header">
         <div className="profile-container">
-     <img src={image} alt="Profile" className="profile" />
+        
+     <img src={image} alt="Profile"  id ="pic" className="profile" />
          <div className="myprofile">
             <h3 id ="name">{name}</h3>
             </div>
@@ -85,12 +86,8 @@ const Sidebar = ({
  </div>
  </li>
  ))}
-        
-        
-      </ul>
-
-     
-    </nav>
+ </ul>
+</nav>
   );
 };
 

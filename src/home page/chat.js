@@ -5,6 +5,8 @@ import Sidebar from "./sideBar";
 import GroupCreationModal from "./createGroup";
 import Info from './info'
 import { RiEmojiStickerFill } from "react-icons/ri";
+import { FaFileImage } from "react-icons/fa";
+import { FcGallery } from "react-icons/fc";
 
 const ChatApp = () => {
  const [name, setName] = useState(localStorage.getItem("checkname"));
@@ -355,6 +357,7 @@ const handleChangeWallpaper = (event) => {
  };
  reader.readAsDataURL(file);
  }
+//  console.log("msg_idfor wallpaper",msg_id);
  fetch(`http://localhost:3005/wallpaper?message_id${msg_id}`,{
   method:"Post",
   headers:{
@@ -400,6 +403,9 @@ const handleChangeWallpaper = (event) => {
  }
 
     })
+  }
+  const handlefile =(file)=>{
+    console.log("file",file);
   }
 
  return (
@@ -464,7 +470,7 @@ setIsCreatingGroup={setIsCreatingGroup}
  selectedGroup={selectedGroup}
  selectedUser={selectedUser}
  />
-<div className="chat-messages" id="chat-messages" style={{ backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover' }}>
+<div className="chat-messages"  style={{ backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover' }}>
  {(selectedUser ? messages : groupMessages).map((msg, index) => (  
  <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
 {!selectedUser && <span id="msg-name">{msg.name}</span>}
@@ -485,9 +491,10 @@ setIsCreatingGroup={setIsCreatingGroup}
  )}
  <div className="chat-input">
  <label htmlFor="file" className="emoji">
- <img src={""} alt="file" id="icon"/>
+ {/* <img src={"<FaFileImage />"} alt="file" id="icon"/> */}
+ <span id="fileicon"><FaFileImage size={30}  /></span>
  </label>
- <input type="file" id="file" onChange={(e) => {}} />
+ <input type="file" id="file" onChange={(e) => {handlefile(e.target)}} />
  <input type="text" id="message-input" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
  <button id="send-button" onClick={sendMessage}>Send</button>
  <div className="emojiicon">
