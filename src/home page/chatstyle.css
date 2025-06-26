@@ -189,6 +189,7 @@
   padding: 20px;
   border-top: 2px solid #34495e;
   background-color: #2a6592;
+
   
 }
 
@@ -261,8 +262,9 @@
 .emojiicon{
   padding-left: 10px;
     border-radius: 70px;
-      /* position: static;
-  z-index: 10; */
+      position: static;
+  z-index: 10;
+ 
    
 
 }
@@ -357,6 +359,12 @@
   width: 400px;
   max-width: 90%;
 }
+.group-creation-modal input[type="text"]{
+width: 90%;
+height: 30px;
+border-radius: 10px;
+
+}
 
 .group-creation-modal h2 {
   margin-bottom: 20px;
@@ -366,7 +374,7 @@
 }
 
 .group-creation-modal  {
-  width: 100%;
+  /* width: 100%; */
   padding: 12px;
   margin-bottom: 15px;
   border: 2px solid #ccc; 
@@ -396,6 +404,7 @@
 
 .group-creation-modal .user-selection-list input[type="checkbox"] {
   transform: scale(1.2);
+ 
 }
 
 .group-creation-modal button {
@@ -460,7 +469,7 @@
   padding-left: 6px;
    cursor: pointer;
    
-  border-radius: 8px;
+  border-radius: 15px;
   margin-bottom: 10px; 
   word-wrap: break-word;
   display: inline-block;

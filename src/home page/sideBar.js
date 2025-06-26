@@ -7,36 +7,30 @@ const Sidebar = ({
   name,
   image,
   chatList,
-  // toggleMenu,
   openChat,
-  // showMenu,
   setIsCreatingGroup,
   setTheme,
   opengroupchat,
   grouplist
-
-  
- 
 }) => {
-   const [search, setSearch] = useState("");
-    const [showMenu, setShowMenu] = useState();
-   const Filteruser = chatList.filter((user)=> user.Name.toLowerCase().includes(search.toLowerCase()))
-    const FilterGroup = grouplist.filter((group)=> group.group_name.toLowerCase().includes(search.toLowerCase()))
-   console.log("searchinputvalue",search);
-  console.log("name",name);
-   const switchToDarkMode = () => {
+  const [search, setSearch] = useState("");
+  const [showMenu, setShowMenu] = useState();
+  const Filteruser = chatList.filter((user)=> user.Name.toLowerCase().includes(search.toLowerCase()))
+  const FilterGroup = grouplist.filter((group)=> group.group_name.toLowerCase().includes(search.toLowerCase()))
+  const switchToDarkMode = () => {
  setTheme('dark');
+  setShowMenu(!showMenu);
  };
   const switchToLightMode = () => {
  setTheme('light');
+  setShowMenu(!showMenu);
  };
-   const handleLogout =() =>{
+  const handleLogout =() =>{
  localStorage.clear(); 
  window.location.href = 'http://localhost:3000/'; 
 };
  const handleSetting =() =>{console.log("Hello")};
   const toggleMenu = () => {
-  console.log("Toogle_Menu");
  setShowMenu(!showMenu);
  
  };

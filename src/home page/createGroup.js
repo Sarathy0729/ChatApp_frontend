@@ -11,9 +11,7 @@ const GroupCreationModal = ({
   setIsCreatingGroup,
  
 }) => {
-  console.log("chatListforgroup",chatList);
    const handleCreateGroup = () => {
-    console.log("helloGroup");
  if (!groupName || groupMembers.length === 0) {
  alert("Please enter a group name and select members.");
  return;
@@ -24,11 +22,6 @@ const GroupCreationModal = ({
  groupMembers,
  createdBy: sender_id,
  };
- console.log("grouplist",groupData);
- console.log("groupname",groupName);
- console.log("groupmember",groupMembers);
- console.log("createdby",sender_id);
- console.log("ccreateggroupp",groupData);
  
  fetch("http://localhost:3005/create-group", {
  method: "POST",
@@ -45,10 +38,7 @@ const GroupCreationModal = ({
  setIsCreatingGroup(false);
  setGroupName("");
  setGroupMembers([]);
-
- 
- 
- } else {
+} else {
  console.error("Failed to create group:", data.error);
  }
  })

@@ -4,9 +4,8 @@ import EmojiPicker from 'emoji-picker-react';
 import Sidebar from "./sideBar";
 import GroupCreationModal from "./createGroup";
 import Info from './info'
-import { RiEmojiStickerFill } from "react-icons/ri";
 import { FaFileImage } from "react-icons/fa";
-import { FcGallery } from "react-icons/fc";
+
 
 const ChatApp = () => {
  const [name, setName] = useState(localStorage.getItem("checkname"));
@@ -14,7 +13,6 @@ const ChatApp = () => {
  const [selectedUser, setSelectedUser] = useState();
  const [message, setMessage] = useState("");
  const [messages, setMessages] = useState([]);
- console.log("messages.id",messages);
  const [showEmojiPicker, setShowEmojiPicker] = useState();
  const [showOptionsMenu, setShowOptionsMenu] = useState(); 
  const [theme, setTheme] = useState();
@@ -22,26 +20,19 @@ const ChatApp = () => {
  const [groupMembers, setGroupMembers] = useState([]);
  const [groupName, setGroupName] = useState("");
  const [wallpaper, setWallpaper] = useState('');
- console.log("Wallpaper",wallpaper);
  const [grouplist , setgrouplist]= useState([]);
  const [selectedGroup, setSelectedGroup] = useState();
  const [group_members,setgroupmembers]=useState();
- console.log("group_members12345",group_members);
-
+ const [group_ID,setGroupID]=useState();
 const [groupMessages, setGroupMessages] = useState([]);
 const sender_id = localStorage.getItem("checkid");
 const [receiver_id, setReceiverId] = useState();
 const [image, setImages] = useState(localStorage.getItem("checkimage"));
 const [Is_info,setIs_info]= useState();
-console.log("members",Is_info);
 const[msg_id,setMsg_id]=useState();
-console.log("msg_idjnkdvnevfjn",msg_id);
-const messageId = messages.map((msg,index)=>(msg.id))
-console.log("messages",messageId);
 
 
-
- useEffect(() => {
+useEffect(() => {
  fetch("http://localhost:3005/user-profile", {
  method: "GET",
  headers: {
@@ -58,24 +49,9 @@ console.log("messages",messageId);
  })
  .then((response) => response.json())
  .then((data) => setgrouplist(data))
- 
-
  .catch((error) => console.error("Error fetching user profile:", error));
  }, []);
-// -------groupList------
-//  useEffect(() => {
-//  fetch(`http://localhost:3005/group-info?user_id=${sender_id}`, {
-//  method: "GET",
-//  headers: {
-//  "Content-Type": "application/json",
-//  },
-//  })
-//  .then((response) => response.json())
-//  .then((data) => setgrouplist(data))
- 
-//  .catch((error) => console.error("Error fetching user profile:", error));
-//  }, []);
- 
+
 // useEffect(() => {
 
 // fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
@@ -100,7 +76,7 @@ console.log("messages",messageId);
 // }, [messages]);
 
 // useEffect(()=>{
-// fetch(`http://localhost:3005/group-messages?group_id=${selectedGroup.id}`, {
+// fetch(`http://localhost:3005/group-messages?group_id=${group_ID}`, {
 // method: "GET",
 // headers: {
 // "Content-Type": "application/json",
@@ -122,18 +98,11 @@ console.log("messages",messageId);
 
 // },[groupMessages]);
 
- const openChat = (user) => {
- 
-  // console.log("openChat");
-
-
- setReceiverId(user.id);
+const openChat = (user) => {
+setReceiverId(user.id);
  setSelectedUser(user);
  setSelectedGroup(null);
-
-
-
- fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${user.id}`, {
+fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${user.id}`, {
  method: "GET",
  headers: {
  "Content-Type": "application/json",
@@ -141,7 +110,6 @@ console.log("messages",messageId);
  })
  .then((response) => response.json())
  .then((data) => {
- console.log("data",data);
  if (Array.isArray(data)) {
  const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
  setMessages(sortedMessages);
@@ -150,7 +118,6 @@ console.log("messages",messageId);
  const messageId = messages.map((msg,index)=>(setMsg_id(msg.id)))
 console.log("messages",messageId);
  setMessages([]);
-
  }
  })
  .catch((error) => console.error("Error fetching messages:", error));
@@ -159,10 +126,10 @@ console.log("messages",messageId);
 // ----select groupchat------
 
 const opengroupchat = (group) => {
-  // console.log("group",group);
  setSelectedGroup(group);
  setSelectedUser(null);
-
+ setGroupID(group.id)
+ 
  fetch(`http://localhost:3005/group-messages?group_id=${group.id}`, {
  method: "GET",
  headers: {
@@ -175,8 +142,8 @@ const opengroupchat = (group) => {
  const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
  console.log("msg",sortedMessages);
  setGroupMessages(sortedMessages);
- 
- } else {
+ }
+  else {
  console.error("Unexpected data format:", data);
  setGroupMessages([]);
  }
@@ -187,14 +154,10 @@ const opengroupchat = (group) => {
 // ------sendMessage-----------------
 
 const sendMessage = () => {
- 
- 
-
  if (selectedGroup) {
- 
- const newMessage = { message_text: message, sender_id, group_id: selectedGroup.id };
- 
- fetch("http://localhost:3005/send-group-message", {
+
+  const newMessage = { message_text: message, sender_id, group_id: selectedGroup.id };
+  fetch("http://localhost:3005/send-group-message", {
  method: "POST",
  headers: {
  "Content-Type": "application/json",
@@ -206,19 +169,15 @@ const sendMessage = () => {
  if (data.success) {
  fetchGroupMessages(selectedGroup.id);
  setMessage("");
- 
  } else {
  console.error("Failed to send group message:", data.error);
  }
  })
  .catch((error) => console.error("Error sending group message:", error));
-
- } else 
+} else 
  if (selectedUser) {
- 
- const newMessage = { text: message, sender_id, receiver_id };
-
- fetch("http://localhost:3005/send-message", {
+  const newMessage = { text: message, sender_id, receiver_id };
+fetch("http://localhost:3005/send-message", {
  method: "POST",
  headers: {
  "Content-Type": "application/json",
@@ -240,7 +199,6 @@ const sendMessage = () => {
 
 // --------fetchMessages-------------------------
 const fetchMessages = (sender_id, receiver_id) => {
-    // console.log("sender_id",sender_id);
  fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
  method: "GET",
  headers: {
@@ -260,7 +218,6 @@ const fetchMessages = (sender_id, receiver_id) => {
  .catch((error) => console.error("Error fetching messages:", error));
 };
 const fetchGroupMessages = (group_id) => {
-  console.log("groupIdcr",group_id);
  fetch(`http://localhost:3005/group-messages?group_id=${group_id}`, {
  method: "GET",
  headers: {
@@ -270,12 +227,10 @@ const fetchGroupMessages = (group_id) => {
  .then((response) => response.json())
  .then((data) => {
  if (Array.isArray(data)) {
-//  console.log("data",data);
  const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
  console.log("groupMessage232",sortedMessages);
  setGroupMessages(sortedMessages);
-
- } else {
+} else {
  console.error("Unexpected data format:", data);
  setGroupMessages([]);
  }
@@ -301,7 +256,6 @@ const fetchGroupMessages = (group_id) => {
 // -------clearChat---------
 
  const handleClearChat = () => {
- 
  fetch("http://localhost:3005/clear-messages", {
  method: "DELETE",
  headers: {
@@ -314,6 +268,7 @@ const fetchGroupMessages = (group_id) => {
  if (data.success) {
  
  setMessages([]);
+ setShowOptionsMenu(false);
  console.log("Chat cleared successfully");
  } else {
  console.error("Failed to clear chat:", data.error);
@@ -322,6 +277,28 @@ const fetchGroupMessages = (group_id) => {
  .catch((error) => console.error("Error clearing chat:", error));
  
  };
+
+ const handleCleargroupChat =()=>{
+  console.log("groupMessages cleared",group_ID);
+  fetch("http://localhost:3005/clear-groupmessages",{
+    method:"DELETE",
+    headers:{
+      "Content-Type":"application/json",
+    },
+    body:JSON.stringify({group_ID})
+  })
+  .then((response)=> response.json())
+  .then((data)=>{
+    if (data.success){
+      setGroupMessages([]);
+      setShowOptionsMenu(false);
+      console.log("GroupChat cleared successfully");
+    }else{
+      console.log("Failed to clear chat:")
+    }
+  })
+  .catch((error) => console.error("Error clearing chat:", error));
+ }
 
  const openStatus =()=>{
   console.log("groupmembers",group_members)
@@ -335,13 +312,11 @@ const fetchGroupMessages = (group_id) => {
        "Content-Type": "application/json",
       }
     }
-
-  )
+)
   .then((response) => response.json())
   .then((data)=>{setgroupmembers(data)})
 } 
  }
-
 
  const handleBlockUser = () => {
  console.log("Block clicked");
@@ -357,14 +332,12 @@ const handleChangeWallpaper = (event) => {
  };
  reader.readAsDataURL(file);
  }
-//  console.log("msg_idfor wallpaper",msg_id);
- fetch(`http://localhost:3005/wallpaper?message_id${msg_id}`,{
+fetch(`http://localhost:3005/wallpaper?message_id${msg_id}`,{
   method:"Post",
   headers:{
     "Content-Type":"application/json",
   }
-
- })
+})
  .then((response)=> response.json())
  .then((data)=>{console.log("wallpaper upload successfully")})
   };
@@ -374,19 +347,11 @@ const handleChangeWallpaper = (event) => {
  console.log("Report clicked");
  };
  
-  //  const handleEmojiClick = (emojiData) => {
-  //   setMessage((prev) => prev + emojiData.emoji);
-  //   setShowEmojiPicker(false);
-  // };
-  // const handleAddmembers=()=>{
-  //   console.log("aaaa");
-  // }
   const handleClear =(id)=>{
     setMsg_id(id);
     console.log("clear_message",id);
     const ID = id;
-
-     fetch(`http://localhost:3005/clear-singlemsg?userid=${ID}`,{
+ fetch(`http://localhost:3005/clear-singlemsg?userid=${ID}`,{
       method:"DELETE",
       headers:{
         "Content-Type": "application/json",
@@ -401,8 +366,27 @@ const handleChangeWallpaper = (event) => {
       else {
  console.error("Failed to clear chat:");
  }
-
+ })
+  }
+  const handlecleargroupmsg =(id)=>{
+    console.log("clearGroupchat",id);
+    fetch(`http://localhost:3005/clear-singlegroupmsg?groupid=${id}`,{
+      method:"DELETE",
+      headers:{
+         "Content-Type": "application/json",
+      },
     })
+        .then((response)=> response.json())
+    .then((data)=>{
+      if(data.success){
+        console.log("cleared")
+         fetchGroupMessages(selectedGroup.id);
+      }
+      else {
+ console.error("Failed to clear chat:");
+ }
+ })
+    
   }
   const handlefile =(file)=>{
     console.log("file",file);
@@ -418,8 +402,7 @@ const handleChangeWallpaper = (event) => {
     openChat={openChat}
     opengroupchat={opengroupchat}
     setIsCreatingGroup={setIsCreatingGroup}
-    grouplist={grouplist}
-   
+    grouplist={grouplist}  
   />
   {isCreatingGroup && ( <GroupCreationModal
 groupName={groupName}
@@ -446,16 +429,14 @@ setIsCreatingGroup={setIsCreatingGroup}
  <>
  <li onClick={handleClearChat}>Clear All Chat</li>
  <li onClick={handleBlockUser}>Block</li>
- 
  <li onClick={() => document.getElementById("wallpaperInput").click()}> Wallpaper</li>
  <input type="file" id="wallpaperInput" style={{ display: 'none' }} accept="image/*" onChange={handleChangeWallpaper}/>
  <li onClick={handleReport}>Report</li>
  </>
- 
  )}
  {selectedGroup && (
  <>
- <li onClick={handleClearChat}>Clear Group Chat</li>
+ <li onClick={handleCleargroupChat}>Clear All Group Chat</li>
  <li onClick={() => document.getElementById("wallpaperInput").click()}> Wallpaper</li>
  <input type="file" id="wallpaperInput" style={{ display: 'none' }} accept="image/*" onChange={handleChangeWallpaper}/>
  {/* <li onClick={handleExistGroup}>Exist</li> */}
@@ -474,42 +455,36 @@ setIsCreatingGroup={setIsCreatingGroup}
  {(selectedUser ? messages : groupMessages).map((msg, index) => (  
  <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
 {!selectedUser && <span id="msg-name">{msg.name}</span>}
-<p onClick={()=>{handleClear(msg.id)}}>{msg.message_text} </p>
+{selectedUser ? (
+      <p onClick={() => handleClear(msg.id)}>{msg.message_text}</p>
+    ) : (
+      <p onClick={() => handlecleargroupmsg(msg.id)}>{msg.message_text}</p>
+    )}
+  
  <span className="message-time">{formatDate(msg.sent_at)}</span>
- {/* {msg.sender_id === sender_id && (
- <span className="message-status">
- {msg.is_read ? '✔✔' : '✔'}
- </span>
- )} */}
-
- </div>
- 
+</div>
 
  ))}
  </div>
  </>
+
  )}
+ 
  <div className="chat-input">
  <label htmlFor="file" className="emoji">
- {/* <img src={"<FaFileImage />"} alt="file" id="icon"/> */}
- <span id="fileicon"><FaFileImage size={30}  /></span>
+ <span id="fileicon"><FaFileImage size={30} /></span>
  </label>
  <input type="file" id="file" onChange={(e) => {handlefile(e.target)}} />
  <input type="text" id="message-input" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
  <button id="send-button" onClick={sendMessage}>Send</button>
- <div className="emojiicon">
+ <span className="emojiicon">
  {showEmojiPicker && <EmojiPicker onEmojiClick={onEmojiClick} />}
- {/* {showEmojiPicker && <EmojiPickerContainer onEmojiClick={handleEmojiClick} />} */}
   <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}>😊</button> 
+ </span>
  </div>
- 
  </div>
- 
-
-</div>
 {/* ------chatWindow------- */}
-
- </div>
+</div>
  );
 };
 export default ChatApp;

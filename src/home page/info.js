@@ -13,41 +13,25 @@ const Info = ({
     group_members  
  
 }) => {
-  console.log("selectedgroup",selectedGroup);
   const[addUsers,setAddUsers]=useState();
-  const[is_namechange,setnamechange]=useState(false);
-  console.log("is_namechangeww",is_namechange);
-  // console.log("conditioncheck",addUsers);
   const[addgroupMembers,setaddgroupMembers]=useState([]);
-  //  console.log("addusers923292829482398",addgroupMembers);
   const[allUsers,setAllUsers]=useState();
-  // console.log("allUsers",allUsers);
   const [groupMembersinfo,setgroupMembersinfo]=useState(group_members );
-  console.log("groupMembers23232",groupMembersinfo);
-
-  // console.log("Helloworld1234",groupMembersinfo);
-  //   console.log("hsdlnvldkvnljkdf",selectedGroup);
-
       useEffect(() => {
     setgroupMembersinfo(group_members );
      fetch("http://localhost:3005/user-profile")
       .then((res) => res.json())
       .then((data) => setAllUsers(data));
   }, [group_members]);
-  // useEffect(()=>{}),[is_namechange];
 
-
-
-    const handleAddMembers = ()=>{
+  const handleAddMembers = ()=>{
       setAddUsers(!addUsers) 
       console.log("Add Members"); 
-      
-    }
+      }
     const addMembers =()=>{
       const groupname = selectedGroup.group_name;
       const id = selectedGroup.id;
      const groupdata ={id,addgroupMembers,groupname}
-     console.log("groupdata",groupdata);
       fetch("http://localhost:3005/addMembers",{
         method:"POST",
         headers:{
@@ -65,29 +49,20 @@ const Info = ({
           else{
             console.log("error");
           }
-        })
-
-    }
+        }) }
     const handleRemoveMembers =(group)=>{
-        console.log("remove.id",group);
         const group_id = selectedGroup.id;
-        // console.log("user_id",group_id);
-        
-         fetch(`http://localhost:3005/remove_member`,{
+        fetch(`http://localhost:3005/remove_member`,{
             method:"post",
             headers:{
                 "Content-Type":"application/json",
             },
              body: JSON.stringify({group_id , group }),  
-
-        })
+            })
         .then((response) => response.json())
  .then((data) => {
- 
  if (data.success) {
     setgroupMembersinfo(null)
- console.log("Removed succefully");
- console.log("helloconsole");
 
  } else {
  console.log("Failed to Remove Members:", data.error);
@@ -105,8 +80,8 @@ const Info = ({
   <li ><FcSearch /><img src={selectedUser.images } alt="Profile-Pic" placeholder ="Search" className="user-info-pro" /></li>
 
   <br></br>
-  <li className="user-info"> <span className="icon"> <CgProfile size={20}/> </span><strong onClick={()=>{setnamechange(!is_namechange)}}> <input type ="text" value={selectedUser.Name} /></strong> 
-  {is_namechange && <input type="text"/>}</li>
+  <li className="user-info"> <span className="icon"> <CgProfile size={20}/> </span><strong > {selectedUser.Name} </strong> 
+</li>
 
   <br></br>
   <li className="user-info"> <span className="icon"> <MdAttachEmail /> </span> {selectedUser.gmail}</li>
@@ -131,19 +106,15 @@ const Info = ({
       </div>
     )}
     { addUsers && selectedGroup &&(
-      
-      
-      <div>
+       <div>
         <ul className="Add_Users">
         {allUsers.map((user,index)=>(
           <li key={index} className="chat-members-add"  >
             <label>
-           
-          <input type="checkbox" className="addusers" value={user.id}  onChange={(e) => {
+            <input type="checkbox" className="addusers" value={user.id}  onChange={(e) => {
               const userId = e.target.value;
               if (e.target.checked) {
-
-                 setaddgroupMembers([...addgroupMembers, userId]);
+              setaddgroupMembers([...addgroupMembers, userId]);
                
               } else {
                
@@ -154,11 +125,8 @@ const Info = ({
           <img src={user.images } className="gprofile" /> 
           {user.Name}
           </label>
-           
-          </li>
-
-
-        ))}
+           </li>
+           ))}
         </ul>
         <button onClick={addMembers}>Submit</button>
       </div>
