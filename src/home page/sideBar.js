@@ -2,6 +2,7 @@
 import GroupCreationModal from './createGroup';
 
  import React, { useEffect, useState } from "react";
+import { MdSettingsSuggest } from "react-icons/md";
 
 const Sidebar = ({
   name,
@@ -46,7 +47,7 @@ const Sidebar = ({
             <h3 id ="name">{name}</h3>
             </div>
               <div className="menu-container">
-          <button className="menu-button" onClick={toggleMenu}>⋮</button>
+          <button className="menu-button" onClick={toggleMenu}><MdSettingsSuggest size={30} /></button>
           {showMenu && (
             <ul className='dropdown-menu'>
               <li onClick={()=>setIsCreatingGroup(true)}>New Group</li>
@@ -57,15 +58,15 @@ const Sidebar = ({
           )}
         </div>
         </div>
-      
-        <input type="text" id="search-input" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)}/>
-      
+       
+     
+        <input type="text" id="search-input" placeholder="  🔎 Search..." value={search} onChange={(e) => setSearch(e.target.value)}/>
       </header>
 
       <ul id="chat-list">
         {Filteruser.map((user,index) => (
      <li key={index} className="chat-members" onClick={()=> openChat(user)} >
-            <img src={user.images} alt={"profile pic"} className="profile" />
+            <img src={user.images} alt="profile pic" className="profile" />
             <div className="chat-info"> 
             
             <h2>{user.Name}</h2>
@@ -74,7 +75,7 @@ const Sidebar = ({
         ))}
         {FilterGroup.map((group, index) => (
  <li key={index} className="chat-members" onClick={() => opengroupchat(group)}>
- <img src={""} alt="profile pic" className="profile" />
+ <img src={group.images ||""} alt="profile pic" className="profile" />
  <div className="chat-info">
  <h2 >{group.group_name}</h2>
  </div>

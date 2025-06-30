@@ -5,6 +5,7 @@ import Sidebar from "./sideBar";
 import GroupCreationModal from "./createGroup";
 import Info from './info'
 import { FaFileImage } from "react-icons/fa";
+import { FaFileInvoice } from "react-icons/fa";
 
 
 const ChatApp = () => {
@@ -13,6 +14,7 @@ const ChatApp = () => {
  const [selectedUser, setSelectedUser] = useState();
  const [message, setMessage] = useState("");
  const [messages, setMessages] = useState([]);
+ console.log("messages",messages);
  const [showEmojiPicker, setShowEmojiPicker] = useState();
  const [showOptionsMenu, setShowOptionsMenu] = useState(); 
  const [theme, setTheme] = useState();
@@ -30,6 +32,8 @@ const [receiver_id, setReceiverId] = useState();
 const [image, setImages] = useState(localStorage.getItem("checkimage"));
 const [Is_info,setIs_info]= useState();
 const[msg_id,setMsg_id]=useState();
+// const[tick,settick]=useState(localStorage.getItem("tick"));
+// console.log("tick",tick);
 
 
 useEffect(() => {
@@ -99,6 +103,7 @@ useEffect(() => {
 // },[groupMessages]);
 
 const openChat = (user) => {
+// settick(true);
 setReceiverId(user.id);
  setSelectedUser(user);
  setSelectedGroup(null);
@@ -126,6 +131,7 @@ console.log("messages",messageId);
 // ----select groupchat------
 
 const opengroupchat = (group) => {
+  console.log("groupimages",group.images);
  setSelectedGroup(group);
  setSelectedUser(null);
  setGroupID(group.id)
@@ -419,7 +425,7 @@ setIsCreatingGroup={setIsCreatingGroup}
  <>
  <div className="chat-header">
   <span  className="chat-user" onClick={()=> openStatus()} >
- <img src={selectedUser ? selectedUser.images : ''} alt="profile" className="profile" id="chat-header-image" />
+ <img src={selectedUser ? selectedUser.images : selectedGroup.images} alt="profile" className="profile" id="chat-header-image" />
  <h2 id="chat-header-name">{selectedUser ? selectedUser.Name : selectedGroup.group_name}</h2>
  </span>
  <button className="options-button" onClick={toggleOptionsMenu}>⋮</button>
@@ -462,6 +468,11 @@ setIsCreatingGroup={setIsCreatingGroup}
     )}
   
  <span className="message-time">{formatDate(msg.sent_at)}</span>
+  {msg.sender_id === sender_id && (
+ <span className="message-status">
+ {msg.is_read ?'✔✔': '✔'}
+ </span>
+ )} 
 </div>
 
  ))}

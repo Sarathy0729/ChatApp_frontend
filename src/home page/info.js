@@ -17,6 +17,7 @@ const Info = ({
   const[addgroupMembers,setaddgroupMembers]=useState([]);
   const[allUsers,setAllUsers]=useState();
   const [groupMembersinfo,setgroupMembersinfo]=useState(group_members );
+  console.log("groupMembersinfo",groupMembersinfo);
       useEffect(() => {
     setgroupMembersinfo(group_members );
      fetch("http://localhost:3005/user-profile")
@@ -73,11 +74,11 @@ const Info = ({
     }
   
   return (
-  <div>
+  <div className={`info-panel ${Is_info ? "slide-in" : "slide-out"}`}>
     {Is_info && <div className = "member-info">
  {selectedUser &&
   <ul className="list">
-  <li ><FcSearch /><img src={selectedUser.images } alt="Profile-Pic" placeholder ="Search" className="user-info-pro" /></li>
+  <li ><img src={selectedUser.images } alt="Profile-Pic" placeholder ="Search" className="user-info-pro" /></li>
 
   <br></br>
   <li className="user-info"> <span className="icon"> <CgProfile size={20}/> </span><strong > {selectedUser.Name} </strong> 
@@ -93,6 +94,7 @@ const Info = ({
 
 {selectedGroup && groupMembersinfo && groupMembersinfo.length > 0 && (
       <div>
+
         <h4 className="GroupName">Group: {selectedGroup.group_name}</h4>
         <button onClick={()=>{handleAddMembers()}}><IoPersonAddOutline size={20}/></button>
         <ul className="list">
@@ -140,6 +142,8 @@ const Info = ({
 };
 
 export default Info;
+
+
 
 
 

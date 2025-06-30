@@ -28,6 +28,7 @@ const ChangePassword = () => {
   };
 
   return (
+    <div className='login'>
     <div className="container">
       <div className="fm">
         <label className="lb" htmlFor="email">
@@ -49,6 +50,7 @@ const ChangePassword = () => {
       <div className="btn">
         <button type="button" className="button" id="changePassword" onClick={handleChangePassword}>Change Password</button>
       </div>
+    </div>
     </div>
   );
 };

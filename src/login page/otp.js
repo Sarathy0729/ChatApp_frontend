@@ -43,6 +43,7 @@ function OTP() {
   };
 
   return (
+    <div className='login'>
     <div className="container">
       <h3>
         Verification
@@ -63,6 +64,7 @@ function OTP() {
           <button type="button" className="button" onClick={verifyOtp}>Verify</button>
         </div>
       </form>
+    </div>
     </div>
   );
 }
