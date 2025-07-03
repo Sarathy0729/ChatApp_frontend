@@ -14,26 +14,24 @@ const ChatApp = () => {
  const [selectedUser, setSelectedUser] = useState();
  const [message, setMessage] = useState("");
  const [messages, setMessages] = useState([]);
- console.log("messages",messages);
  const [showEmojiPicker, setShowEmojiPicker] = useState();
  const [showOptionsMenu, setShowOptionsMenu] = useState(); 
  const [theme, setTheme] = useState();
  const [isCreatingGroup, setIsCreatingGroup] = useState();
  const [groupMembers, setGroupMembers] = useState([]);
  const [groupName, setGroupName] = useState("");
- const [wallpaper, setWallpaper] = useState('');
+ const [window_wallpaper, setWallpaper] = useState('');
  const [grouplist , setgrouplist]= useState([]);
  const [selectedGroup, setSelectedGroup] = useState();
  const [group_members,setgroupmembers]=useState();
+const[grouppic,setgrouppic]=useState();
  const [group_ID,setGroupID]=useState();
 const [groupMessages, setGroupMessages] = useState([]);
 const sender_id = localStorage.getItem("checkid");
 const [receiver_id, setReceiverId] = useState();
 const [image, setImages] = useState(localStorage.getItem("checkimage"));
 const [Is_info,setIs_info]= useState();
-const[msg_id,setMsg_id]=useState();
-// const[tick,settick]=useState(localStorage.getItem("tick"));
-// console.log("tick",tick);
+
 
 
 useEffect(() => {
@@ -56,54 +54,53 @@ useEffect(() => {
  .catch((error) => console.error("Error fetching user profile:", error));
  }, []);
 
-// useEffect(() => {
+useEffect(() => {
 
-// fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
-// method: "GET",
-// headers: {
-// "Content-Type": "application/json",
-// },
-// },)
-// .then((response) => response.json())
-// .then((data) => {
-// if (Array.isArray(data)) {
-// const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
-// setMessages(sortedMessages);
+fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
+method: "GET",
+headers: {
+"Content-Type": "application/json",
+},
+},)
+.then((response) => response.json())
+.then((data) => {
+if (Array.isArray(data)) {
+const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
+setMessages(sortedMessages);
  
-// } else {
-// console.error("Unexpected data format:", data);
-// setMessages([]);
-// }
-// })
-// .catch((error) => console.error("Error fetching messages:", error));
+} else {
+console.error("Unexpected data format:", data);
+setMessages([]);
+}
+})
+.catch((error) => console.error("Error fetching messages:", error));
  
-// }, [messages]);
+}, [messages]);
 
-// useEffect(()=>{
-// fetch(`http://localhost:3005/group-messages?group_id=${group_ID}`, {
-// method: "GET",
-// headers: {
-// "Content-Type": "application/json",
-// },
-// })
-// .then((response) => response.json())
-// .then((data) => {
-// if (Array.isArray(data)) {
-// const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
-// console.log("msg",sortedMessages);
-// setGroupMessages(sortedMessages);
+useEffect(()=>{
+fetch(`http://localhost:3005/group-messages?group_id=${group_ID}`, {
+method: "GET",
+headers: {
+"Content-Type": "application/json",
+},
+})
+.then((response) => response.json())
+.then((data) => {
+if (Array.isArray(data)) {
+const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
+console.log("msg",sortedMessages);
+setGroupMessages(sortedMessages);
  
-// } else {
-// console.error("Unexpected data format:", data);
-// setGroupMessages([]);
-// }
-// })
-// .catch((error) => console.error("Error fetching group messages:", error));
+} else {
+console.error("Unexpected data format:", data);
+setGroupMessages([]);
+}
+})
+.catch((error) => console.error("Error fetching group messages:", error));
 
-// },[groupMessages]);
+},[groupMessages]);
 
 const openChat = (user) => {
-// settick(true);
 setReceiverId(user.id);
  setSelectedUser(user);
  setSelectedGroup(null);
@@ -120,8 +117,7 @@ fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${user.
  setMessages(sortedMessages);
  } else {
  console.error("Unexpected data format:", data);
- const messageId = messages.map((msg,index)=>(setMsg_id(msg.id)))
-console.log("messages",messageId);
+
  setMessages([]);
  }
  })
@@ -132,6 +128,7 @@ console.log("messages",messageId);
 
 const opengroupchat = (group) => {
   console.log("groupimages",group.images);
+  setgrouppic(group.images);
  setSelectedGroup(group);
  setSelectedUser(null);
  setGroupID(group.id)
@@ -330,7 +327,6 @@ const fetchGroupMessages = (group_id) => {
 
 const handleChangeWallpaper = (event) => {
  const file = event.target.files[0];
- console.log("message_id",msg_id);
  if (file) {
  const reader = new FileReader();
  reader.onload = (e) => {
@@ -338,11 +334,13 @@ const handleChangeWallpaper = (event) => {
  };
  reader.readAsDataURL(file);
  }
-fetch(`http://localhost:3005/wallpaper?message_id${msg_id}`,{
+ console.log(" check wallpaper",window_wallpaper);
+fetch(`http://localhost:3005/wallpaper`,{
   method:"Post",
   headers:{
     "Content-Type":"application/json",
-  }
+  },
+  body : JSON.stringify(window_wallpaper)
 })
  .then((response)=> response.json())
  .then((data)=>{console.log("wallpaper upload successfully")})
@@ -354,7 +352,7 @@ fetch(`http://localhost:3005/wallpaper?message_id${msg_id}`,{
  };
  
   const handleClear =(id)=>{
-    setMsg_id(id);
+
     console.log("clear_message",id);
     const ID = id;
  fetch(`http://localhost:3005/clear-singlemsg?userid=${ID}`,{
@@ -456,8 +454,9 @@ setIsCreatingGroup={setIsCreatingGroup}
  group_members={group_members}
  selectedGroup={selectedGroup}
  selectedUser={selectedUser}
+ grouppic={grouppic}
  />
-<div className="chat-messages"  style={{ backgroundImage: `url(${wallpaper})`, backgroundSize: 'cover' }}>
+<div className="chat-messages"  style={{ backgroundImage: `url(${window_wallpaper})`, backgroundSize: 'cover' }}>
  {(selectedUser ? messages : groupMessages).map((msg, index) => (  
  <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
 {!selectedUser && <span id="msg-name">{msg.name}</span>}
@@ -468,11 +467,11 @@ setIsCreatingGroup={setIsCreatingGroup}
     )}
   
  <span className="message-time">{formatDate(msg.sent_at)}</span>
-  {msg.sender_id === sender_id && (
+  {/* {msg.sender_id === sender_id && (
  <span className="message-status">
  {msg.is_read ?'✔✔': '✔'}
  </span>
- )} 
+ )}  */}
 </div>
 
  ))}

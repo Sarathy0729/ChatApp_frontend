@@ -1,7 +1,4 @@
-// import React from 'react';
-import GroupCreationModal from './createGroup';
-
- import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdSettingsSuggest } from "react-icons/md";
 
 const Sidebar = ({
@@ -69,16 +66,20 @@ const Sidebar = ({
             <img src={user.images} alt="profile pic" className="profile" />
             <div className="chat-info"> 
             
-            <h2>{user.Name}</h2>
+            <h2>{user.Name}</h2> 
             </div>
+            
           </li>
+          
         ))}
+        
         {FilterGroup.map((group, index) => (
  <li key={index} className="chat-members" onClick={() => opengroupchat(group)}>
  <img src={group.images ||""} alt="profile pic" className="profile" />
  <div className="chat-info">
  <h2 >{group.group_name}</h2>
  </div>
+ <p></p>
  </li>
  ))}
  </ul>
