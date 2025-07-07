@@ -23,7 +23,12 @@ const ChatApp = () => {
  const [window_wallpaper, setWallpaper] = useState('');
  const [grouplist , setgrouplist]= useState([]);
  const [selectedGroup, setSelectedGroup] = useState();
+ const [chatwallpaper,setchatwallpaper]=useState([]);
+ console.log("wallpaperrrrrr",chatwallpaper);
+ console.log("seferferf",selectedGroup);
+ 
  const [group_members,setgroupmembers]=useState();
+ console.log("efewfwefew",group_members);
 const[grouppic,setgrouppic]=useState();
  const [group_ID,setGroupID]=useState();
 const [groupMessages, setGroupMessages] = useState([]);
@@ -51,54 +56,66 @@ useEffect(() => {
  })
  .then((response) => response.json())
  .then((data) => setgrouplist(data))
+
  .catch((error) => console.error("Error fetching user profile:", error));
+
  }, []);
+ useEffect(()=>{
+   fetch(`http://localhost:3005/getwallpaper?sender_id=${sender_id}&receiver_id=${receiver_id}`,{
+  method:"GET",
+   headers: {
+ "Content-Type": "application/json",
+ },
+ })
+ .then((response) => response.json())
+ .then((data) => data.map((wall)=>setchatwallpaper(wall.char_window_wallpaper)))
+ },[selectedUser])
 
-useEffect(() => {
+// useEffect(() => {
 
-fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
-method: "GET",
-headers: {
-"Content-Type": "application/json",
-},
-},)
-.then((response) => response.json())
-.then((data) => {
-if (Array.isArray(data)) {
-const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
-setMessages(sortedMessages);
+// fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
+// method: "GET",
+// headers: {
+// "Content-Type": "application/json",
+// },
+// },)
+// .then((response) => response.json())
+// .then((data) => {
+// if (Array.isArray(data)) {
+// const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
+// setMessages(sortedMessages);
  
-} else {
-console.error("Unexpected data format:", data);
-setMessages([]);
-}
-})
-.catch((error) => console.error("Error fetching messages:", error));
+// } else {
+// console.error("Unexpected data format:", data);
+// setMessages([]);
+// }
+// })
+// .catch((error) => console.error("Error fetching messages:", error));
  
-}, [messages]);
+// }, [messages]);
 
-useEffect(()=>{
-fetch(`http://localhost:3005/group-messages?group_id=${group_ID}`, {
-method: "GET",
-headers: {
-"Content-Type": "application/json",
-},
-})
-.then((response) => response.json())
-.then((data) => {
-if (Array.isArray(data)) {
-const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
-console.log("msg",sortedMessages);
-setGroupMessages(sortedMessages);
+// useEffect(()=>{
+// fetch(`http://localhost:3005/group-messages?group_id=${group_ID}`, {
+// method: "GET",
+// headers: {
+// "Content-Type": "application/json",
+// },
+// })
+// .then((response) => response.json())
+// .then((data) => {
+// if (Array.isArray(data)) {
+// const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
+// console.log("msg",sortedMessages);
+// setGroupMessages(sortedMessages);
  
-} else {
-console.error("Unexpected data format:", data);
-setGroupMessages([]);
-}
-})
-.catch((error) => console.error("Error fetching group messages:", error));
+// } else {
+// console.error("Unexpected data format:", data);
+// setGroupMessages([]);
+// }
+// })
+// .catch((error) => console.error("Error fetching group messages:", error));
 
-},[groupMessages]);
+// },[groupMessages]);
 
 const openChat = (user) => {
 setReceiverId(user.id);
@@ -326,25 +343,29 @@ const fetchGroupMessages = (group_id) => {
  };
 
 const handleChangeWallpaper = (event) => {
- const file = event.target.files[0];
- if (file) {
- const reader = new FileReader();
- reader.onload = (e) => {
- setWallpaper(e.target.result); 
- };
- reader.readAsDataURL(file);
- }
- console.log(" check wallpaper",window_wallpaper);
-fetch(`http://localhost:3005/wallpaper`,{
-  method:"Post",
-  headers:{
-    "Content-Type":"application/json",
-  },
-  body : JSON.stringify(window_wallpaper)
-})
- .then((response)=> response.json())
- .then((data)=>{console.log("wallpaper upload successfully")})
-  };
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setWallpaper(e.target.result); 
+     
+      fetch("http://localhost:3005/wallpaper", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender_id: localStorage.getItem("checkid"),
+          wallpaper: e.target.result,
+          receiver_id:receiver_id
+
+        }),
+      })
+      .then((res) => res.json())
+      .then((data) => console.log("Wallpaper uploaded:", data));
+    };
+    reader.readAsDataURL(file); 
+  }
+};
+
 
 
  const handleReport = () => {
@@ -406,7 +427,9 @@ fetch(`http://localhost:3005/wallpaper`,{
     openChat={openChat}
     opengroupchat={opengroupchat}
     setIsCreatingGroup={setIsCreatingGroup}
-    grouplist={grouplist}  
+    grouplist={grouplist} 
+    sender_id={sender_id}
+    receiver_id={receiver_id}
   />
   {isCreatingGroup && ( <GroupCreationModal
 groupName={groupName}
@@ -456,7 +479,7 @@ setIsCreatingGroup={setIsCreatingGroup}
  selectedUser={selectedUser}
  grouppic={grouppic}
  />
-<div className="chat-messages"  style={{ backgroundImage: `url(${window_wallpaper})`, backgroundSize: 'cover' }}>
+<div className="chat-messages"  style={{ backgroundImage: `url(${chatwallpaper})`, backgroundSize: "700px"}}>
  {(selectedUser ? messages : groupMessages).map((msg, index) => (  
  <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
 {!selectedUser && <span id="msg-name">{msg.name}</span>}

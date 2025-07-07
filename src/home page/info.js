@@ -8,7 +8,8 @@ const Info = ({
   selectedUser,
   Is_info,
   group_members,
-  grouppic
+  grouppic,
+ 
 }) => {
   const [image, setImage] = useState('');
   console.log("grouppic",grouppic);

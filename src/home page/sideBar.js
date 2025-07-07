@@ -9,7 +9,9 @@ const Sidebar = ({
   setIsCreatingGroup,
   setTheme,
   opengroupchat,
-  grouplist
+  grouplist,
+  sender_id,
+  receiver_id
 }) => {
   const [search, setSearch] = useState("");
   const [showMenu, setShowMenu] = useState();
@@ -32,6 +34,15 @@ const Sidebar = ({
  setShowMenu(!showMenu);
  
  };
+//  useEffect(()=>{
+//   fetch(`http://localhost:3005/last-message?sender_id=${sender_id}&receiver_id=${receiver_id}`,{
+//     method: "GET",
+//     headers:{
+//       "Content-Type" : "application/json",
+//     },
+//   })
+//   .then()
+//  })
 
 
   return (
@@ -67,6 +78,7 @@ const Sidebar = ({
             <div className="chat-info"> 
             
             <h2>{user.Name}</h2> 
+            <p> Message </p>
             </div>
             
           </li>
@@ -78,6 +90,7 @@ const Sidebar = ({
  <img src={group.images ||""} alt="profile pic" className="profile" />
  <div className="chat-info">
  <h2 >{group.group_name}</h2>
+ <p>lost Message</p>
  </div>
  <p></p>
  </li>
