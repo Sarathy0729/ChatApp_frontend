@@ -12,7 +12,7 @@ const GroupCreationModal = ({
   setIsCreatingGroup,
  
 }) => {
-    const [image, setImage] = useState(''); 
+  const [image, setImage] = useState(''); 
    const handleCreateGroup = () => {
  if (!groupName || groupMembers.length === 0) {
  alert("Please enter a group name and select members.");
@@ -49,17 +49,13 @@ const GroupCreationModal = ({
  };
  const handleImageChange = (e) => {
     const file = e.target.files[0];
-    console.log("file",file);
     const reader = new FileReader();
-    console.log("reader",reader);
-
     reader.onloadend = () => {
       console.log("reader.result",reader.result);
       setImage(reader.result); 
     };
 
     if (file) {
-      console.log("file1",file);
       reader.readAsDataURL(file); 
     }
   };

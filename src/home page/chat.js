@@ -20,25 +20,18 @@ const ChatApp = () => {
  const [isCreatingGroup, setIsCreatingGroup] = useState();
  const [groupMembers, setGroupMembers] = useState([]);
  const [groupName, setGroupName] = useState("");
- const [window_wallpaper, setWallpaper] = useState('');
  const [grouplist , setgrouplist]= useState([]);
  const [selectedGroup, setSelectedGroup] = useState();
  const [chatwallpaper,setchatwallpaper]=useState([]);
- console.log("wallpaperrrrrr",chatwallpaper);
- console.log("seferferf",selectedGroup);
- 
+ const [groupwallpaper,setgroupwallpaper]=useState([])
  const [group_members,setgroupmembers]=useState();
- console.log("efewfwefew",group_members);
-const[grouppic,setgrouppic]=useState();
+ const[grouppic,setgrouppic]=useState();
  const [group_ID,setGroupID]=useState();
-const [groupMessages, setGroupMessages] = useState([]);
-const sender_id = localStorage.getItem("checkid");
-const [receiver_id, setReceiverId] = useState();
-const [image, setImages] = useState(localStorage.getItem("checkimage"));
-const [Is_info,setIs_info]= useState();
-
-
-
+ const [groupMessages, setGroupMessages] = useState([]);
+ const sender_id = localStorage.getItem("checkid");
+ const [receiver_id, setReceiverId] = useState();
+ const [image, setImages] = useState(localStorage.getItem("checkimage"));
+ const [Is_info,setIs_info]= useState();
 useEffect(() => {
  fetch("http://localhost:3005/user-profile", {
  method: "GET",
@@ -56,20 +49,49 @@ useEffect(() => {
  })
  .then((response) => response.json())
  .then((data) => setgrouplist(data))
+.catch((error) => console.error("Error fetching user profile:", error));
+}, []);
 
- .catch((error) => console.error("Error fetching user profile:", error));
+ useEffect(() => {
+  fetch(`http://localhost:3005/getwallpaper?sender_id=${sender_id}&receiver_id=${receiver_id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.length > 0) {
+        setchatwallpaper(data[0].char_window_wallpaper);
+      } else {
+        setchatwallpaper(""); 
+      }
+    })
+    .catch((err) => {
+      console.error("Error fetching private wallpaper:", err);
+      setchatwallpaper(""); 
+    });
+}, [selectedUser]);
 
- }, []);
- useEffect(()=>{
-   fetch(`http://localhost:3005/getwallpaper?sender_id=${sender_id}&receiver_id=${receiver_id}`,{
+
+  useEffect(()=>{
+   fetch(`http://localhost:3005/getgroupwallpaper?group_id=${group_ID}`,{
   method:"GET",
    headers: {
  "Content-Type": "application/json",
  },
  })
  .then((response) => response.json())
- .then((data) => data.map((wall)=>setchatwallpaper(wall.char_window_wallpaper)))
- },[selectedUser])
+ .then((data) => {
+  if(data.length >0){
+    setgroupwallpaper(data[0].chat_window_wallpaper);
+  }
+  else{
+    setgroupwallpaper("");
+  }
+ })
+
+ },[selectedGroup])
 
 // useEffect(() => {
 
@@ -134,8 +156,7 @@ fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${user.
  setMessages(sortedMessages);
  } else {
  console.error("Unexpected data format:", data);
-
- setMessages([]);
+setMessages([]);
  }
  })
  .catch((error) => console.error("Error fetching messages:", error));
@@ -144,12 +165,11 @@ fetch(`http://localhost:3005/messages?sender_id=${sender_id}&receiver_id=${user.
 // ----select groupchat------
 
 const opengroupchat = (group) => {
-  console.log("groupimages",group.images);
   setgrouppic(group.images);
  setSelectedGroup(group);
  setSelectedUser(null);
  setGroupID(group.id)
- 
+
  fetch(`http://localhost:3005/group-messages?group_id=${group.id}`, {
  method: "GET",
  headers: {
@@ -160,7 +180,6 @@ const opengroupchat = (group) => {
  .then((data) => {
  if (Array.isArray(data)) {
  const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
- console.log("msg",sortedMessages);
  setGroupMessages(sortedMessages);
  }
   else {
@@ -175,8 +194,7 @@ const opengroupchat = (group) => {
 
 const sendMessage = () => {
  if (selectedGroup) {
-
-  const newMessage = { message_text: message, sender_id, group_id: selectedGroup.id };
+const newMessage = { message_text: message, sender_id, group_id: selectedGroup.id };
   fetch("http://localhost:3005/send-group-message", {
  method: "POST",
  headers: {
@@ -248,7 +266,6 @@ const fetchGroupMessages = (group_id) => {
  .then((data) => {
  if (Array.isArray(data)) {
  const sortedMessages = data.sort((a, b) => new Date(a.sent_at) - new Date(b.sent_at));
- console.log("groupMessage232",sortedMessages);
  setGroupMessages(sortedMessages);
 } else {
  console.error("Unexpected data format:", data);
@@ -299,7 +316,6 @@ const fetchGroupMessages = (group_id) => {
  };
 
  const handleCleargroupChat =()=>{
-  console.log("groupMessages cleared",group_ID);
   fetch("http://localhost:3005/clear-groupmessages",{
     method:"DELETE",
     headers:{
@@ -321,11 +337,8 @@ const fetchGroupMessages = (group_id) => {
  }
 
  const openStatus =()=>{
-  console.log("groupmembers",group_members)
   setIs_info(!Is_info);
   if(selectedGroup){
-  console.log("selectedGroup is check",selectedGroup.id)
-  console.log("checkmembers")
   fetch(`http://localhost:3005/group-members?group_id=${selectedGroup.id}`,{
     method:"GET",
     headers:{
@@ -346,9 +359,7 @@ const handleChangeWallpaper = (event) => {
   const file = event.target.files[0];
   if (file) {
     const reader = new FileReader();
-    reader.onload = (e) => {
-      setWallpaper(e.target.result); 
-     
+    reader.onload = (e) => { 
       fetch("http://localhost:3005/wallpaper", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -365,16 +376,30 @@ const handleChangeWallpaper = (event) => {
     reader.readAsDataURL(file); 
   }
 };
-
-
-
- const handleReport = () => {
+const handleChangegroupWallpaper = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => { 
+      fetch("http://localhost:3005/groupwallpaper", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          group_id: group_ID,
+          wallpaper: e.target.result,
+        }),
+      })
+      .then((res) => res.json())
+      .then((data) => console.log("Wallpaper uploaded:", data));
+    };
+    reader.readAsDataURL(file); 
+  }
+};
+const handleReport = () => {
  console.log("Report clicked");
  };
  
   const handleClear =(id)=>{
-
-    console.log("clear_message",id);
     const ID = id;
  fetch(`http://localhost:3005/clear-singlemsg?userid=${ID}`,{
       method:"DELETE",
@@ -394,7 +419,6 @@ const handleChangeWallpaper = (event) => {
  })
   }
   const handlecleargroupmsg =(id)=>{
-    console.log("clearGroupchat",id);
     fetch(`http://localhost:3005/clear-singlegroupmsg?groupid=${id}`,{
       method:"DELETE",
       headers:{
@@ -416,6 +440,46 @@ const handleChangeWallpaper = (event) => {
   const handlefile =(file)=>{
     console.log("file",file);
   }
+  const handleremovewallpaper =()=>{
+    fetch("http://localhost:3005/remove_wallpaper",{
+      method:"DELETE",
+      headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({sender_id,receiver_id})
+           
+    })
+        
+        .then((response)=>response.json())
+        .then((data)=>{
+          if(data.sucess){
+            setchatwallpaper([]);
+
+          }
+          else{
+            console.log("cant remove delete")
+          }
+        })
+   
+  }
+  const handleremovegroupwallpaper = ()=>{
+    fetch("http://localhost:3005/remove_groupwallpaper",{
+      method:"DELETE",
+      headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({group_ID})
+           
+    })
+        
+        .then((response)=>response.json())
+        .then((data)=>{
+          if(data.sucess){
+            setgroupwallpaper([]);
+
+          }
+          else{
+            console.log("cant remove delete")
+          }
+        })
+
+  }
 
  return (
  <div className={`app-container ${theme}`}>
@@ -430,6 +494,7 @@ const handleChangeWallpaper = (event) => {
     grouplist={grouplist} 
     sender_id={sender_id}
     receiver_id={receiver_id}
+    group_ID={group_ID}
   />
   {isCreatingGroup && ( <GroupCreationModal
 groupName={groupName}
@@ -458,15 +523,16 @@ setIsCreatingGroup={setIsCreatingGroup}
  <li onClick={handleBlockUser}>Block</li>
  <li onClick={() => document.getElementById("wallpaperInput").click()}> Wallpaper</li>
  <input type="file" id="wallpaperInput" style={{ display: 'none' }} accept="image/*" onChange={handleChangeWallpaper}/>
- <li onClick={handleReport}>Report</li>
+ <li onClick={handleremovewallpaper}>Remove Wallpaper</li>
  </>
  )}
  {selectedGroup && (
  <>
  <li onClick={handleCleargroupChat}>Clear All Group Chat</li>
  <li onClick={() => document.getElementById("wallpaperInput").click()}> Wallpaper</li>
- <input type="file" id="wallpaperInput" style={{ display: 'none' }} accept="image/*" onChange={handleChangeWallpaper}/>
+ <input type="file" id="wallpaperInput" style={{ display: 'none' }} accept="image/*" onChange={handleChangegroupWallpaper}/>
  {/* <li onClick={handleExistGroup}>Exist</li> */}
+  <li onClick={handleremovegroupwallpaper}>Remove Wallpaper</li>
  <li onClick={handleReport}>Report</li>
  </>
  )}
@@ -479,7 +545,7 @@ setIsCreatingGroup={setIsCreatingGroup}
  selectedUser={selectedUser}
  grouppic={grouppic}
  />
-<div className="chat-messages"  style={{ backgroundImage: `url(${chatwallpaper})`, backgroundSize: "700px"}}>
+<div className="chat-messages"  style={{ backgroundImage: `url(${(selectedUser ?chatwallpaper:groupwallpaper)})`, backgroundSize: "1000px"}}>
  {(selectedUser ? messages : groupMessages).map((msg, index) => (  
  <div key={index} className={`message ${msg.sender_id === sender_id ? 'message-sent' : 'message-received'}`}>
 {!selectedUser && <span id="msg-name">{msg.name}</span>}
@@ -507,13 +573,14 @@ setIsCreatingGroup={setIsCreatingGroup}
  <label htmlFor="file" className="emoji">
  <span id="fileicon"><FaFileImage size={30} /></span>
  </label>
+ 
  <input type="file" id="file" onChange={(e) => {handlefile(e.target)}} />
  <input type="text" id="message-input" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
  <button id="send-button" onClick={sendMessage}>Send</button>
  <span className="emojiicon">
  {showEmojiPicker && <EmojiPicker onEmojiClick={onEmojiClick} />}
   <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}>😊</button> 
- </span>
+</span>
  </div>
  </div>
 {/* ------chatWindow------- */}
@@ -521,5 +588,12 @@ setIsCreatingGroup={setIsCreatingGroup}
  );
 };
 export default ChatApp;
+
+
+
+
+
+
+
 
 
