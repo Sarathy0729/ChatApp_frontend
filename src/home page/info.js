@@ -23,6 +23,9 @@ const Info = ({
   const [allUsers, setAllUsers] = useState([]);
   const [groupMembersInfo, setGroupMembersInfo] = useState(group_members);
   console.log("groupMembersInfo; check admin",groupMembersInfo);
+  // const is_admin = groupMembersInfo.is_admin;
+  // console.log("is_admin",is_admin);
+  
 
    useEffect(() => {
     setGroupMembersInfo(group_members);
@@ -153,7 +156,7 @@ const Info = ({
                 Update Profile
               </button>
 
-              {edit && (
+              {edit &&  (
                 <div className="Edit-profile">
                    <label htmlFor="name">Update Name : </label>
                   <input type="text" placeholder="Update your Name" value={name} onChange={(e) => setName(e.target.value)}  />

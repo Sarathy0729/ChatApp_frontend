@@ -871,6 +871,40 @@ margin: auto;
   background-color: #138496;
 }
 
+.chat-info {
+  flex: 1;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-info-header h2 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.chat-time {
+  font-size: 12px;
+  color: #888;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.chat-lastmsg {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 
 

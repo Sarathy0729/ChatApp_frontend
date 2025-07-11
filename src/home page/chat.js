@@ -30,6 +30,7 @@ const ChatApp = () => {
  const [groupMessages, setGroupMessages] = useState([]);
  const sender_id = localStorage.getItem("checkid");
  const [receiver_id, setReceiverId] = useState();
+ console.log("receiver_id3123",receiver_id);
  const [image, setImages] = useState(localStorage.getItem("checkimage"));
  const [Is_info,setIs_info]= useState();
 useEffect(() => {
@@ -303,7 +304,6 @@ const fetchGroupMessages = (group_id) => {
  .then((response) => response.json())
  .then((data) => {
  if (data.success) {
- 
  setMessages([]);
  setShowOptionsMenu(false);
  console.log("Chat cleared successfully");
@@ -438,7 +438,25 @@ const handleReport = () => {
     
   }
   const handlefile =(file)=>{
-    console.log("file",file);
+    console.log("1jjjj");
+    const files = file
+  console.log("2uwoeufheuf_id",receiver_id);
+      const reader = new FileReader();
+      console.log("3hhhh");
+      
+        console.log("4jhj")
+
+    fetch (`http://localhost:3005/file_upload?sender_id=${sender_id}&recevier_id=${receiver_id}&file=${file} `,{
+      method:"post",
+      headers:{
+        "Content-Type":"application/json",
+      },
+    
+
+      
+    })
+    .then((response)=>response.json())
+    .then((data)=>console.log("data",data))
   }
   const handleremovewallpaper =()=>{
     fetch("http://localhost:3005/remove_wallpaper",{
@@ -495,6 +513,7 @@ const handleReport = () => {
     sender_id={sender_id}
     receiver_id={receiver_id}
     group_ID={group_ID}
+    message={message}
   />
   {isCreatingGroup && ( <GroupCreationModal
 groupName={groupName}
