@@ -9,10 +9,11 @@ const Info = ({
   Is_info,
   group_members,
   grouppic,
+  sender_id
  
 }) => {
+  console.log("sender_id+login",sender_id);
   const [image, setImage] = useState('');
-  console.log("grouppic",grouppic);
   const [groupImage, setGroupImage] = useState('');
   const [edit, setEdit] = useState(false);
   const [groupEdit, setGroupEdit] = useState(false);
@@ -22,9 +23,8 @@ const Info = ({
   const [addGroupMembers, setAddGroupMembers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [groupMembersInfo, setGroupMembersInfo] = useState(group_members);
-  console.log("groupMembersInfo; check admin",groupMembersInfo);
-  // const is_admin = groupMembersInfo.is_admin;
-  // console.log("is_admin",is_admin);
+   console.log("groupMembersInfo; check admin",groupMembersInfo);
+
   
 
    useEffect(() => {
@@ -70,7 +70,6 @@ const Info = ({
       group_name: groupName,
       group_image: groupImage
     };
-    console.log("Grouppayload",payload);
     setGroupEdit(false);
     fetch("http://localhost:3005/updateGroup", {
       method: "PATCH",
@@ -177,15 +176,18 @@ const Info = ({
                  
               
               </div>
+              
 
               <ul className="chat-list">
                 {groupMembersInfo.map((member, index) => (
                   <li key={index} className="chat-members">
                <img src={member.images || " "}  alt="Profile" className="profile" width="40" height="40" />
-                 <div className="chat-info"> <h2>{member.Name} </h2></div>
+                 <div className="chat-info"> <h2>{member.Name}  <span className="admin">{member.is_admin ?"admin":""}</span></h2></div>
                     {/* <button onClick={() => handleRemoveMember(member.user_id)}>
                       Remove
                     </button> */}
+                    { member.is_admin && (member.user_id === sender_id)?" ":""}
+                    
           <div id="trash">        
 <button className="button-remove" onClick={() => handleRemoveMember(member.user_id)}>
   <svg
@@ -232,6 +234,7 @@ const Info = ({
                  <button className="update" onClick={() => setGroupEdit(!groupEdit)}>
                   Update Group
                 </button>
+                {}
                   <button  className="add-btn" onClick={handleAddMembers}>
                   <IoPersonAddOutline size={20} />
                 </button>

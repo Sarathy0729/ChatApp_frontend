@@ -905,7 +905,17 @@ margin: auto;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.time_msg{
+  /* padding-top:50px ; */
+  /* margin-top: 50px; */
+  
+  
 
+}
+.admin{
+  font-size: xx-small;
+  color:#0056b3;
+}
 
 
 

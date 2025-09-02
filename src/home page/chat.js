@@ -30,9 +30,11 @@ const ChatApp = () => {
  const [groupMessages, setGroupMessages] = useState([]);
  const sender_id = localStorage.getItem("checkid");
  const [receiver_id, setReceiverId] = useState();
- console.log("receiver_id3123",receiver_id);
  const [image, setImages] = useState(localStorage.getItem("checkimage"));
  const [Is_info,setIs_info]= useState();
+ const [filelist,setfilelist]=useState();
+ 
+ 
 useEffect(() => {
  fetch("http://localhost:3005/user-profile", {
  method: "GET",
@@ -351,12 +353,41 @@ const fetchGroupMessages = (group_id) => {
 } 
  }
 
+
  const handleBlockUser = () => {
+  fetch("http://localhost:3005/block-user",{
+    method:"Post",
+    headers:{"Content-type":"application/json"},
+    body:JSON.stringify({sender_id,receiver_id})
+  })
+  .then((response)=>response.json())
+  .then((data)=>{
+    if(data.sucess){
+      console.log("user is blocked")
+    }
+  })
  console.log("Block clicked");
  };
 
+ const handleUnBlock = ()=>{
+  console.log("unblocked-user")
+  fetch("http://localhost:3005/unblock-user",{
+    method:"Post",
+    headers:{"Content-type":"application/json"},
+    body:JSON.stringify({sender_id,receiver_id})
+  })
+  .then((response)=>response.json())
+  .then((data)=>{
+    if(data.sucess){
+      console.log("user is unblocked")
+    }
+  })
+ }
+
 const handleChangeWallpaper = (event) => {
+  console.log("event",event)
   const file = event.target.files[0];
+  console.log("file--file",file);
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => { 
@@ -380,6 +411,7 @@ const handleChangegroupWallpaper = (event) => {
   const file = event.target.files[0];
   if (file) {
     const reader = new FileReader();
+    console.log("reader=group==",reader);
     reader.onload = (e) => { 
       fetch("http://localhost:3005/groupwallpaper", {
         method: "POST",
@@ -437,27 +469,86 @@ const handleReport = () => {
  })
     
   }
-  const handlefile =(file)=>{
-    console.log("1jjjj");
-    const files = file
-  console.log("2uwoeufheuf_id",receiver_id);
-      const reader = new FileReader();
-      console.log("3hhhh");
-      
-        console.log("4jhj")
-
-    fetch (`http://localhost:3005/file_upload?sender_id=${sender_id}&recevier_id=${receiver_id}&file=${file} `,{
-      method:"post",
-      headers:{
-        "Content-Type":"application/json",
-      },
+  // const handlefile =(file)=>{
+   
+  //   const files = file;
+  //   console.log("files++files",files);
+  //   const reader = new FileReader();
+  //   console.log("reader==1",reader);
+  //   console.log("receiver_id_fileupload",receiver_id);
+  //   // reader.onload = (e)=>{
+  //     console.log("its api working");
     
-
+  //   fetch (`http://localhost:3005/file_upload?sender_id=${sender_id}&reciver_id=${receiver_id}&file=${file}`,{
       
+  //     method:"post",
+  //     headers:{
+  //       "Content-Type":"application/json",
+  //     },
+  //       //    body: JSON.stringify({
+  //       //   sender_id: sender_id,
+  //       //   wallpaper: file,
+  //       //   receiver_id:receiver_id
+
+  //       // }),
+  //   })
+  //   .then((response)=>response.json())
+  //   .then((data)=>console.log("data",data))
+  // }y
+const handlefile = (selectedFile) => {
+  console.log("selectedFile-+-file",selectedFile)
+  if (!selectedFile){ 
+    console.log("its false selectedfiles",)
+    return};
+
+  const reader = new FileReader();
+  
+
+  reader.onloadend = () => {
+    const base64String = reader.result; 
+
+    console.log("Base64 Data:", base64String); 
+    console.log("Receiver ID:", receiver_id);
+    console.log("hhhhhhhh");
+
+    fetch(`http://localhost:3005/file_upload`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        sender_id: sender_id,
+        receiver_id: receiver_id,
+        file: base64String, 
+        
+      }),
     })
-    .then((response)=>response.json())
-    .then((data)=>console.log("data",data))
-  }
+      .then((response) => response.json())
+      
+      
+      .then((data) => fetchfile())
+      .catch((error) => console.error("Upload Error:", error));
+  };
+
+
+  reader.readAsDataURL(selectedFile);
+};
+
+ const fetchfile = ()=>{
+  console.log("@#$");
+  fetch(`http://localhost:3005/file-fetch?sender_id=${sender_id}&receiver_id=${receiver_id}`,{
+    method:"GET",
+    headers: {
+      "Content-Type":"application/json",
+    },
+  })
+  .then((response)=>response.json())
+  .then((data)=> setfilelist(data)
+   
+  )
+
+ }
+
   const handleremovewallpaper =()=>{
     fetch("http://localhost:3005/remove_wallpaper",{
       method:"DELETE",
@@ -540,6 +631,7 @@ setIsCreatingGroup={setIsCreatingGroup}
  <>
  <li onClick={handleClearChat}>Clear All Chat</li>
  <li onClick={handleBlockUser}>Block</li>
+ <li onClick={handleUnBlock}>UnBlock</li>
  <li onClick={() => document.getElementById("wallpaperInput").click()}> Wallpaper</li>
  <input type="file" id="wallpaperInput" style={{ display: 'none' }} accept="image/*" onChange={handleChangeWallpaper}/>
  <li onClick={handleremovewallpaper}>Remove Wallpaper</li>
@@ -563,6 +655,7 @@ setIsCreatingGroup={setIsCreatingGroup}
  selectedGroup={selectedGroup}
  selectedUser={selectedUser}
  grouppic={grouppic}
+ sender_id={sender_id}
  />
 <div className="chat-messages"  style={{ backgroundImage: `url(${(selectedUser ?chatwallpaper:groupwallpaper)})`, backgroundSize: "1000px"}}>
  {(selectedUser ? messages : groupMessages).map((msg, index) => (  
@@ -593,8 +686,13 @@ setIsCreatingGroup={setIsCreatingGroup}
  <span id="fileicon"><FaFileImage size={30} /></span>
  </label>
  
- <input type="file" id="file" onChange={(e) => {handlefile(e.target)}} />
- <input type="text" id="message-input" placeholder="Type a message..." value={message} onChange={(e) => setMessage(e.target.value)} />
+
+ <input
+  type="file"
+  id="file"
+  onChange={(e) => handlefile(e.target.files[0])}
+/>
+ <input type="text" id="message-input" accept=".pdf,.js" placeholder="Type a message..." value={message}  onChange={(e) => setMessage(e.target.value)} />
  <button id="send-button" onClick={sendMessage}>Send</button>
  <span className="emojiicon">
  {showEmojiPicker && <EmojiPicker onEmojiClick={onEmojiClick} />}
@@ -607,7 +705,6 @@ setIsCreatingGroup={setIsCreatingGroup}
  );
 };
 export default ChatApp;
-
 
 
 

@@ -18,9 +18,9 @@ const Sidebar = ({
   const [showMenu, setShowMenu] = useState();
   const [lastMessages, setLastMessages] = useState({});
   const [lastGroupMessages, setLastGroupMessages] = useState({});
-  console.log("ejncejine",lastGroupMessages
+  // console.log("ejncejine",lastGroupMessages
 
-  )
+  // )
 
 
   const Filteruser = chatList.filter((user)=> user.Name.toLowerCase().includes(search.toLowerCase()))
@@ -59,7 +59,7 @@ useEffect(() => {
             text: data.message_text || "",
             time: data.sent_at || null
           };
-          console.log( "messages_id",messages[user.id])
+          // console.log( "messages_id",messages[user.id])
         })
       
     }
@@ -136,7 +136,7 @@ const formatTime = (timestamp) => {
       <ul id="chat-list">
      {Filteruser.map((user, index) => {
   const last = lastMessages[user.id];
-  console.log("last",last);
+  // console.log("last",last);
 
   return (
     <li key={index} className="chat-members" onClick={() => openChat(user)}>
@@ -144,14 +144,14 @@ const formatTime = (timestamp) => {
       <div className="chat-info">
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h2>{user.Name}</h2>
-          <span style={{ fontSize: "0.8rem", color: "gray" }}>
+          <span className="time_msg" style={{ fontSize: "0.8rem", color: "gray"  }}>
             {last?.time ? formatTime(last.time) : ""}
           </span>
         </div>
         <p>
           {last?.text
             ? last.text.length > 20
-              ? `${last.text.slice(0, 20)}...`
+              ? `${last.text.slice(0, 20)}. . . .`
               : last.text
             : "No messages yet"}
         </p>
@@ -177,7 +177,7 @@ const formatTime = (timestamp) => {
         <p>
           {last?.text
             ? last.text.length > 20
-              ? `${last.text.slice(0, 20)}...`
+              ? `${last.text.slice(0, 30)}. . .`
               : last.text
             : "No messages yet"}
         </p>
